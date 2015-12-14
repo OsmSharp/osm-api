@@ -7,8 +7,8 @@
     <ProjectGuid>{2017F564-B596-444F-A966-8BD27DAC007F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharp.Service.API</RootNamespace>
-    <AssemblyName>OsmSharp.Service.API</AssemblyName>
+    <RootNamespace>OsmSharp.Osm.API</RootNamespace>
+    <AssemblyName>OsmSharp.Osm.API</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,6 +41,14 @@
       <HintPath>..\packages\Nancy.Authentication.Basic.1.4.1\lib\net40\Nancy.Authentication.Basic.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OsmSharp, Version=0.0.0.69, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.69-beta\lib\net45\OsmSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp.Osm, Version=0.0.0.69, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.69-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
@@ -56,13 +64,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiInstance.cs" />
+    <Compile Include="ApiBootstrapper.cs" />
+    <Compile Include="Db\MemoryDb.cs" />
+    <Compile Include="DefaultApiInstance.cs" />
+    <Compile Include="IApiInstance.cs" />
     <Compile Include="ApiModule.cs" />
+    <Compile Include="Db\IDb.cs" />
+    <Compile Include="NancyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

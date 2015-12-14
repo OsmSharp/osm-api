@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OsmSharp.Osm.API")]
+[assembly: AssemblyTitle("OsmSharp.Osm.API.Selfhost")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OsmSharp.Osm.API")]
+[assembly: AssemblyProduct("OsmSharp.Osm.API.Selfhost")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("dd76945e-49e5-41fc-8b48-c101c134c1b9")]
+[assembly: Guid("14dc3d05-edae-443f-844b-aca60d4c8c87")]
 
 // Version information for an assembly consists of the following four values:
 //

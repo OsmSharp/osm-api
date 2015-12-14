@@ -1,11 +1,29 @@
-﻿using Nancy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// The MIT License (MIT)
 
-namespace OsmSharp.Service.API
+// Copyright (c) 2015 Ben Abelshausen
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using Nancy;
+using System;
+
+namespace OsmSharp.Osm.API
 {
     /// <summary>
     /// Implements a copy of the OSM-API v0.6 according to the documentation found here:
@@ -31,8 +49,12 @@ namespace OsmSharp.Service.API
             Get["{instance}/api/0.6/changesets"] = _ => { return this.GetChangesetQuery(_); };
             Post["{instance}/api/0.6/changeset/{changesetid}/upload"] = _ => { return this.PostChangesetUpload(_); };
             Put["{instance}/api/0.6/[node|way|relation]/create"] = _ => { return this.PutElementCreate(_); };
-            Get["{instance}/api/0.6/[node|way|relation]/{elementid}"] = _ => { return this.GetElement(_); };
-            Put["{instance}/api/0.6/[node|way|relation]/{elementid}"] = _ => { return this.PutElementUpdate(_); };
+            Get["{instance}/api/0.6/node/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Node); };
+            Get["{instance}/api/0.6/way/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Way); };
+            Get["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Relation); };
+            Put["{instance}/api/0.6/node/{elementid}"] = _ => { return this.PutElementUpdate(_); };
+            Put["{instance}/api/0.6/way/{elementid}"] = _ => { return this.PutElementUpdate(_); };
+            Put["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.PutElementUpdate(_); };
             Delete["{instance}/api/0.6/[node|way|relation]/{elementid}"] = _ => { return this.DeleteElement(_); };
             Get["{instance}/api/0.6/[node|way|relation]/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
             Get["{instance}/api/0.6/[node|way|relation]/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
@@ -50,7 +72,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetCapabilities(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -64,7 +102,23 @@ namespace OsmSharp.Service.API
         /// </returns>
         private dynamic GetMap(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -78,7 +132,23 @@ namespace OsmSharp.Service.API
         /// </returns>
         private dynamic GetPermissions(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -88,7 +158,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic PutChangesetCreate(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -98,7 +184,23 @@ namespace OsmSharp.Service.API
         /// <returns>Returns the changeset with the given id in OSM-XML format. </returns>
         private dynamic GetChangeset(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -108,7 +210,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic PutChangesetUpdate(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -118,7 +236,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic PutChangesetClose(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -128,7 +262,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetChangesetDownload(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -138,7 +288,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic PostChangesetExpandBB(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -148,7 +314,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetChangesetQuery(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -158,7 +340,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic PostChangesetUpload(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -168,7 +366,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic PutElementCreate(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -176,9 +390,42 @@ namespace OsmSharp.Service.API
         /// </summary>
         /// <param name="_"></param>
         /// <returns></returns>
-        private dynamic GetElement(dynamic _)
+        private dynamic GetElement(dynamic _, OsmGeoType type)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                // get id.
+                long id;
+                if (!long.TryParse(_.elementid, out id))
+                { // id was parsed.
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                switch(type)
+                {
+                    case OsmGeoType.Node:
+                        return instance.GetNode(id);
+                    case OsmGeoType.Way:
+                        return instance.GetWay(id);
+                    case OsmGeoType.Relation:
+                        return instance.GetRelation(id);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -188,7 +435,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic PutElementUpdate(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -198,7 +461,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic DeleteElement(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -208,7 +487,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetElementHistory(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -218,7 +513,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetElementVersion(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -228,7 +539,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetElementMultiple(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -238,7 +565,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetElementRelations(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -248,7 +591,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetWaysForNode(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -258,7 +617,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private  dynamic GetElementFull(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -268,7 +643,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetUserDetails(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -278,7 +669,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetCurrentUserDetails(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
 
         /// <summary>
@@ -288,7 +695,23 @@ namespace OsmSharp.Service.API
         /// <returns></returns>
         private dynamic GetCurrentUserPreferences(dynamic _)
         {
-            throw new NotImplementedException();
+            try
+            {
+                this.EnableCors();
+
+                // get instance and check if active.
+                IApiInstance instance;
+                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+                { // oeps, instance not active!
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return null;
+            }
+            catch (Exception)
+            { // an unhandled exception!
+                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+            }
         }
     }
 }
