@@ -83,7 +83,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return instance.GetCapabilities();
             }
             catch (Exception)
             { // an unhandled exception!

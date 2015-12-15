@@ -20,47 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Osm.API.Db;
-using System;
+using System.Xml.Serialization;
 
-namespace OsmSharp.Osm.API
+namespace OsmSharp.Osm.API.Domain
 {
     /// <summary>
-    /// A default api instance.
+    /// Defines the api timeout.
     /// </summary>
-    public class DefaultApiInstance : IApiInstance
+    public class timeout
     {
-        private readonly IDb _db;
-
-        /// <summary>
-        /// Creates a new api instance.
-        /// </summary>
-        public DefaultApiInstance(IDb db)
-        {
-            _db = db;
-        }
-
-        /// <summary>
-        /// Gets the node with the given id.
-        /// </summary>
-        public Node GetNode(long id)
-        {
-            return _db.GetNode(id);
-        }
-
-        /// <summary>
-        /// Gets the way with the 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Way GetWay(long id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Relation GetRelation(long id)
-        {
-            throw new NotImplementedException();
-        }
+        [XmlAttribute]
+        public int seconds { get; set; }
     }
 }

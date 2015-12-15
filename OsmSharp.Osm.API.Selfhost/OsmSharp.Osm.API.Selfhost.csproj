@@ -77,7 +77,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Service.API\OsmSharp.Osm.API.csproj">
+    <ProjectReference Include="..\OsmSharp.Osm.API\OsmSharp.Osm.API.csproj">
       <Project>{2017f564-b596-444f-a966-8bd27dac007f}</Project>
       <Name>OsmSharp.Osm.API</Name>
     </ProjectReference>

@@ -64,7 +64,7 @@ namespace OsmSharp.Osm.API.Db
                     TimeStamp = node.TimeStamp,
                     UserId = node.UserId,
                     UserName = node.UserName,
-                    Version = node.Version,
+                    Version = 1,
                     Visible = node.Visible
                 };
             _nodes.Add(newNode);
@@ -80,11 +80,69 @@ namespace OsmSharp.Osm.API.Db
         }
 
         /// <summary>
+        /// Adds new a new way.
+        /// </summary>
+        public Way AddNewWay(Way way)
+        {
+            var id = 1L;
+            for (var i = 0; i < _ways.Count; i++)
+            {
+                if (_ways[i].Id > id)
+                {
+                    id = _ways[i].Id.Value + 1;
+                }
+            }
+            var newWay = new Way()
+            {
+                Id = id,
+                ChangeSetId = way.ChangeSetId,
+                Nodes = way.Nodes,
+                Tags = way.Tags,
+                TimeStamp = way.TimeStamp,
+                UserId = way.UserId,
+                UserName = way.UserName,
+                Version = 1,
+                Visible = way.Visible
+            };
+            _ways.Add(newWay);
+            return newWay;
+        }
+
+        /// <summary>
         /// Gets the way with the given id.
         /// </summary>
         public Way GetWay(long id)
         {
             return _ways.FirstOrDefault(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// Adds a new relation.
+        /// </summary>
+        public Relation AddNewRelation(Relation relation)
+        {
+            var id = 1L;
+            for (var i = 0; i < _relations.Count; i++)
+            {
+                if (_relations[i].Id > id)
+                {
+                    id = _relations[i].Id.Value + 1;
+                }
+            }
+            var newRelation = new Relation()
+            {
+                Id = id,
+                ChangeSetId = relation.ChangeSetId,
+                Members = relation.Members,
+                Tags = relation.Tags,
+                TimeStamp = relation.TimeStamp,
+                UserId = relation.UserId,
+                UserName = relation.UserName,
+                Version = 1,
+                Visible = relation.Visible
+            };
+            _relations.Add(newRelation);
+            return newRelation;
         }
 
         /// <summary>

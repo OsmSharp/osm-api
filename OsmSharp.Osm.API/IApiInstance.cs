@@ -20,39 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Nancy.Hosting.Self;
-using System;
+using OsmSharp.Osm.API.Domain;
 
-namespace OsmSharp.Osm.API.Selfhost
+namespace OsmSharp.Osm.API
 {
-    class Program
+    /// <summary>
+    /// Abstract representation of an API instance.
+    /// </summary>
+    public interface IApiInstance
     {
-        static void Main(string[] args)
-        {
-            var db = new Db.MemoryDb();
-            var node = db.AddNewNode(new Node()
-                {
-                    Id = null,
-                    ChangeSetId = 1,
-                    Latitude = 21,
-                    Longitude = 2,
-                    TimeStamp = DateTime.Now
-                });
-            var way = db.AddNewWay(Way.Create(-1, 1, 2, 3));
-            var relation = db.AddNewRelation(Relation.Create(-1, RelationMember.Create(1, "somerole", OsmGeoType.Way)));
+        /// <summary>
+        /// Gets the api capabilities.
+        /// </summary>
+        /// <returns></returns>
+        osm GetCapabilities();
 
-            ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
+        /// <summary>
+        /// Gets the node with the given id.
+        /// </summary>
+        osm GetNode(long id);
 
-            // start listening.
-            var uri = new Uri("http://localhost:1234");
-            using (var host = new NancyHost(uri))
-            {
-                host.Start();
+        /// <summary>
+        /// Gets the way with the given id.
+        /// </summary>
+        osm GetWay(long id);
 
-                Console.WriteLine("The API is running at " + uri);
-                Console.WriteLine("Press [Enter] to close.");
-                Console.ReadLine();
-            }
-        }
+        /// <summary>
+        /// Gets the relation with the given id.
+        /// </summary>
+        osm GetRelation(long id);
     }
 }

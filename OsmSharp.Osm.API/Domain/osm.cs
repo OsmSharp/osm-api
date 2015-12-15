@@ -20,39 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Nancy.Hosting.Self;
-using System;
-
-namespace OsmSharp.Osm.API.Selfhost
+namespace OsmSharp.Osm.API.Domain
 {
-    class Program
+    /// <summary>
+    /// The api root object.
+    /// </summary>
+    public class osm
     {
-        static void Main(string[] args)
-        {
-            var db = new Db.MemoryDb();
-            var node = db.AddNewNode(new Node()
-                {
-                    Id = null,
-                    ChangeSetId = 1,
-                    Latitude = 21,
-                    Longitude = 2,
-                    TimeStamp = DateTime.Now
-                });
-            var way = db.AddNewWay(Way.Create(-1, 1, 2, 3));
-            var relation = db.AddNewRelation(Relation.Create(-1, RelationMember.Create(1, "somerole", OsmGeoType.Way)));
-
-            ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
-
-            // start listening.
-            var uri = new Uri("http://localhost:1234");
-            using (var host = new NancyHost(uri))
-            {
-                host.Start();
-
-                Console.WriteLine("The API is running at " + uri);
-                Console.WriteLine("Press [Enter] to close.");
-                Console.ReadLine();
-            }
-        }
+        public api api { get; set; }
     }
 }

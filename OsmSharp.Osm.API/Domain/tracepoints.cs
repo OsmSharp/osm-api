@@ -20,26 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace OsmSharp.Osm.API
+using System.Xml.Serialization;
+
+namespace OsmSharp.Osm.API.Domain
 {
     /// <summary>
-    /// Abstract representation of an API instance.
+    /// Defines the api tracepoint settings.
     /// </summary>
-    public interface IApiInstance
+    public class tracepoints
     {
-        /// <summary>
-        /// Gets the node with the given id.
-        /// </summary>
-        Node GetNode(long id);
-
-        /// <summary>
-        /// Gets the way with the given id.
-        /// </summary>
-        Way GetWay(long id);
-
-        /// <summary>
-        /// Gets the relation with the given id.
-        /// </summary>
-        Relation GetRelation(long id);
+        [XmlAttribute]
+        public int per_page { get; set; }
     }
 }

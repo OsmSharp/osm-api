@@ -67,11 +67,22 @@
     <Compile Include="ApiBootstrapper.cs" />
     <Compile Include="Db\MemoryDb.cs" />
     <Compile Include="DefaultApiInstance.cs" />
+    <Compile Include="Domain\api.cs" />
+    <Compile Include="Domain\area.cs" />
+    <Compile Include="Domain\changesets.cs" />
+    <Compile Include="Domain\osm.cs" />
+    <Compile Include="Domain\status.cs" />
+    <Compile Include="Domain\timeout.cs" />
+    <Compile Include="Domain\tracepoints.cs" />
+    <Compile Include="Domain\version.cs" />
+    <Compile Include="Domain\waynodes.cs" />
     <Compile Include="IApiInstance.cs" />
     <Compile Include="ApiModule.cs" />
     <Compile Include="Db\IDb.cs" />
     <Compile Include="NancyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\OsmXmlResponse.cs" />
+    <Compile Include="Responses\OsmXmlResponseProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
