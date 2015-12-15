@@ -22,6 +22,7 @@
 
 using System.Linq;
 using System.Collections.Generic;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Osm.API.Db
 {
@@ -34,11 +35,104 @@ namespace OsmSharp.Osm.API.Db
         private readonly List<Way> _ways;
         private readonly List<Relation> _relations;
 
+        /// <summary>
+        /// Creates a new memory db.
+        /// </summary>
         public MemoryDb()
         {
             _nodes = new List<Node>();
             _ways = new List<Way>();
             _relations = new List<Relation>();
+        }
+
+        /// <summary>
+        /// Loads all objects in the given enumerable.
+        /// </summary>
+        public void LoadFrom(IEnumerable<OsmGeo> source)
+        { 
+            foreach(var osmGeo in source)
+            {
+                switch(osmGeo.Type)
+                {
+                    case OsmGeoType.Node:
+                        _nodes.Add(osmGeo as Node);
+                        break;
+                    case OsmGeoType.Way:
+                        _ways.Add(osmGeo as Way);
+                        break;
+                    case OsmGeoType.Relation:
+                        _relations.Add(osmGeo as Relation);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all objects inside the given box.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OsmGeo> GetInsideBox(GeoCoordinateBox box)
+        {
+            var nodesInBox = new HashSet<long>();
+            var found = new List<OsmGeo>();
+            for(var i = 0; i < _nodes.Count; i++)
+            {
+                if (box.Contains(_nodes[i].Longitude.Value, _nodes[i].Latitude.Value))
+                {
+                    found.Add(_nodes[i]);
+                    nodesInBox.Add(_nodes[i].Id.Value);
+                }
+            }
+
+            var waysInBox = new HashSet<long>();
+            for (var i = 0; i < _ways.Count; i++)
+            {
+                if (_ways[i].Nodes != null)
+                {
+                    for (var n = 0; n < _ways[i].Nodes.Count; n++)
+                    {
+                        if (nodesInBox.Contains(_ways[i].Nodes[n]))
+                        {
+                            found.Add(_ways[i]);
+                            waysInBox.Add(_ways[i].Id.Value);
+                            break;
+                        }
+                    }
+                }
+            }
+            for (var i = 0; i < _relations.Count; i++)
+            {
+                if (_relations[i].Members != null)
+                {
+                    for (var m = 0; m < _relations[i].Members.Count; m++)
+                    {
+                        var relationFound = false;
+                        var member = _relations[i].Members[m];
+                        switch(member.MemberType.Value)
+                        { 
+                            case OsmGeoType.Node:
+                                if(nodesInBox.Contains(member.MemberId.Value))
+                                {
+                                    relationFound = true;
+                                }
+                                break;
+                            case OsmGeoType.Way:
+                                if (waysInBox.Contains(member.MemberId.Value))
+                                {
+                                    relationFound = true;
+                                }
+                                break;
+                        }
+                        if (relationFound)
+                        {
+                            found.Add(_relations[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return found;
         }
 
         /// <summary>

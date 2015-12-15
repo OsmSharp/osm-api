@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using OsmSharp.Math.Geo;
+using System.Collections.Generic;
+
 namespace OsmSharp.Osm.API.Db
 {
     /// <summary>
@@ -27,6 +30,11 @@ namespace OsmSharp.Osm.API.Db
     /// </summary>
     public interface IDb
     {
+        /// <summary>
+        /// Gets all objects inside the given box.
+        /// </summary>
+        IEnumerable<OsmGeo> GetInsideBox(GeoCoordinateBox geoCoordinateBox);
+
         /// <summary>
         /// Gets the node with the given id.
         /// </summary>

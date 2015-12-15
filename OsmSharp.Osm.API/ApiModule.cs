@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using Nancy;
+using OsmSharp.Osm.Xml.v0_6;
 using System;
 
 namespace OsmSharp.Osm.API
@@ -113,7 +114,37 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                // try to parse bounds.
+                var boundsString = (string)this.Request.Query["bbox"];
+                if(string.IsNullOrWhiteSpace(boundsString))
+                {
+                    return Negotiate.WithStatusCode(HttpStatusCode.BadRequest);
+                }
+                var boundsStrings = boundsString.Split(',');
+                if(boundsStrings.Length != 4)
+                {
+                    return Negotiate.WithStatusCode(HttpStatusCode.BadRequest);
+                }
+
+                double left, bottom = 0, right = 0, top = 0;
+                if(!double.TryParse(boundsStrings[0], System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture, out left) ||
+                   !double.TryParse(boundsStrings[1], System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture, out bottom) ||
+                   !double.TryParse(boundsStrings[2], System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture, out right) ||
+                   !double.TryParse(boundsStrings[3], System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture, out top))
+                {
+                    return Negotiate.WithStatusCode(HttpStatusCode.BadRequest);
+                }
+
+                var result = instance.GetMap(left, bottom, right, top);
+                if(result == null)
+                {
+                    return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+                }
+                return result;
             }
             catch (Exception)
             { // an unhandled exception!
@@ -410,17 +441,26 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
+                osm result = null;
                 switch(type)
                 {
                     case OsmGeoType.Node:
-                        return instance.GetNode(id);
+                        result = instance.GetNode(id);
+                        break;
                     case OsmGeoType.Way:
-                        return instance.GetWay(id);
+                        result = instance.GetWay(id);
+                        break;
                     case OsmGeoType.Relation:
-                        return instance.GetRelation(id);
+                        result = instance.GetRelation(id);
+                        break;
                 }
 
-                return null;
+                if(result == null)
+                {
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return result;
             }
             catch (Exception)
             { // an unhandled exception!

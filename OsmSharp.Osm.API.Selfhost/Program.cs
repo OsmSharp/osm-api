@@ -22,6 +22,7 @@
 
 using Nancy.Hosting.Self;
 using System;
+using System.IO;
 
 namespace OsmSharp.Osm.API.Selfhost
 {
@@ -30,16 +31,12 @@ namespace OsmSharp.Osm.API.Selfhost
         static void Main(string[] args)
         {
             var db = new Db.MemoryDb();
-            var node = db.AddNewNode(new Node()
-                {
-                    Id = null,
-                    ChangeSetId = 1,
-                    Latitude = 21,
-                    Longitude = 2,
-                    TimeStamp = DateTime.Now
-                });
-            var way = db.AddNewWay(Way.Create(-1, 1, 2, 3));
-            var relation = db.AddNewRelation(Relation.Create(-1, RelationMember.Create(1, "somerole", OsmGeoType.Way)));
+
+            using (var stream = new FileInfo(@"D:\work\data\OSM\kempen.osm.pbf").OpenRead())
+            {
+                var source = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
+                db.LoadFrom(source);
+            }
 
             ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
 

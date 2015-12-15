@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Osm.API.Domain;
+using OsmSharp.Osm.Xml.v0_6;
 
 namespace OsmSharp.Osm.API
 {
@@ -34,6 +34,12 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <returns></returns>
         osm GetCapabilities();
+
+        /// <summary>
+        /// Gets all objects within the given bounding box.
+        /// </summary>
+        /// <returns></returns>
+        osm GetMap(double left, double bottom, double right, double top);
 
         /// <summary>
         /// Gets the node with the given id.

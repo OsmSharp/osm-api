@@ -22,7 +22,7 @@
 
 using Nancy;
 using Nancy.Responses.Negotiation;
-using OsmSharp.Osm.API.Domain;
+using OsmSharp.Osm.Xml.v0_6;
 using System;
 using System.Collections.Generic;
 
