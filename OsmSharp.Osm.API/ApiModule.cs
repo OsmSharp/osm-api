@@ -356,7 +356,17 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return new osm()
+                {
+                    version = 0.6,
+                    versionSpecified = true,
+                    changeset = new changeset[] { 
+                        new changeset()
+                        {
+                            id = 1
+                        }
+                    }
+                };
             }
             catch (Exception)
             { // an unhandled exception!

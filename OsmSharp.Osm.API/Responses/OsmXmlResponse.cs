@@ -80,8 +80,10 @@ namespace OsmSharp.Osm.API.Responses
         /// </summary>
         private static XmlWriterSettings XmlWriterSettings = new XmlWriterSettings()
         {
-            
-            Indent = true
+            Encoding = new System.Text.UTF8Encoding(false),
+            Indent = false,
+            NewLineOnAttributes = false,
+            NewLineHandling= NewLineHandling.None
         };
 
         /// <summary>

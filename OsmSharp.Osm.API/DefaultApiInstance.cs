@@ -51,6 +51,8 @@ namespace OsmSharp.Osm.API
         {
             return new osm()
             {
+                version = 0.6,
+                versionSpecified = true,
                 api = new api()
                 {
                     version = new version()
@@ -126,11 +128,13 @@ namespace OsmSharp.Osm.API
             }
 
             return new osm()
-                {
-                    node = nodes.ToArray(),
-                    way = ways.ToArray(),
-                    relation = relations.ToArray()
-                };
+            {
+                version = 0.6,
+                versionSpecified = true,
+                node = nodes.ToArray(),
+                way = ways.ToArray(),
+                relation = relations.ToArray()
+            };
         }
 
         /// <summary>
@@ -146,6 +150,8 @@ namespace OsmSharp.Osm.API
             }
             return new osm()
             {
+                version = 0.6,
+                versionSpecified = true,
                 node = new Xml.v0_6.node[] { node.ConvertTo() }
             };
         }
@@ -163,6 +169,8 @@ namespace OsmSharp.Osm.API
             }
             return new osm()
             {
+                version = 0.6,
+                versionSpecified = true,
                 way = new Xml.v0_6.way[] { way.ConvertTo() }
             };
         }
@@ -180,6 +188,8 @@ namespace OsmSharp.Osm.API
             }
             return new osm()
             {
+                version = 0.6,
+                versionSpecified = true,
                 relation = new Xml.v0_6.relation[] { relation.ConvertTo() }
             };
         }

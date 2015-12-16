@@ -99,20 +99,20 @@ namespace OsmSharp.Osm.API.Responses
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
             if (model is osm)
-            { // the model is a feature collection, only then can this GeoJson processor be used.
+            {
                 return new OsmXmlResponse(model);
             }
-            throw new ArgumentOutOfRangeException("GeoJsonResponseProcessor can only process FeatureCollections.");
+            throw new ArgumentOutOfRangeException("OsmXmlResponseProcessor can only process osm-objects.");
         }
 
         private static bool IsExactXmlContentType(MediaRange requestedContentType)
         {
-            if (requestedContentType.Type.IsWildcard && requestedContentType.Subtype.IsWildcard)
-            {
+            //if (requestedContentType.Type.IsWildcard && requestedContentType.Subtype.IsWildcard)
+            //{
                 return true;
-            }
+            //}
 
-            return requestedContentType.Matches("application/xml") || requestedContentType.Matches("text/xml");
+            //return requestedContentType.Matches("application/xml") || requestedContentType.Matches("text/xml");
         }
 
         private static bool IsWildcardXmlContentType(MediaRange requestedContentType)
