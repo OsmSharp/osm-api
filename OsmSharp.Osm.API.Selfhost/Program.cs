@@ -38,6 +38,16 @@ namespace OsmSharp.Osm.API.Selfhost
                 db.LoadFrom(source);
             }
 
+            db.AddNewUser(new Db.Domain.User()
+                {
+                    AccountCreated = DateTime.Now,
+                    DisplayName = "Ben Abelshausen",
+                    ChangeSetCount = 0,
+                    ContributorTermsAgreed = true,
+                    ContributorTermsPublicDomain = false,
+                    TraceCount = 0
+                });
+
             ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
 
             // start listening.

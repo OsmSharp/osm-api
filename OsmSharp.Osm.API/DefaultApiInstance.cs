@@ -193,5 +193,23 @@ namespace OsmSharp.Osm.API
                 relation = new Xml.v0_6.relation[] { relation.ConvertTo() }
             };
         }
+
+        /// <summary>
+        /// Gets the user with the given id.
+        /// </summary>
+        public osm GetUser(long id)
+        {
+            var user = _db.GetUser(id);
+            if (user == null)
+            {
+                return null;
+            }
+            return new osm()
+            {
+                version = 0.6,
+                versionSpecified = true,
+                user = user.ToXmlUser()
+            };
+        }
     }
 }

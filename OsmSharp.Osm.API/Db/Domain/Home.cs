@@ -20,45 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Osm.Xml.v0_6;
-
-namespace OsmSharp.Osm.API
+namespace OsmSharp.Osm.API.Db.Domain
 {
     /// <summary>
-    /// Abstract representation of an API instance.
+    /// Represents a home location.
     /// </summary>
-    public interface IApiInstance
+    public class Home
     {
-        /// <summary>
-        /// Gets the api capabilities.
-        /// </summary>
-        /// <returns></returns>
-        osm GetCapabilities();
+        public float Latitude { get; set; }
 
-        /// <summary>
-        /// Gets all objects within the given bounding box.
-        /// </summary>
-        /// <returns></returns>
-        osm GetMap(double left, double bottom, double right, double top);
+        public float Longitude { get; set; }
 
-        /// <summary>
-        /// Gets the node with the given id.
-        /// </summary>
-        osm GetNode(long id);
-
-        /// <summary>
-        /// Gets the way with the given id.
-        /// </summary>
-        osm GetWay(long id);
-
-        /// <summary>
-        /// Gets the relation with the given id.
-        /// </summary>
-        osm GetRelation(long id);
-
-        /// <summary>
-        /// Gets the user with the given id.
-        /// </summary>
-        osm GetUser(long id);
+        public float Zoom { get; set; }
     }
 }

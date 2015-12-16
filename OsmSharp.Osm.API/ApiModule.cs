@@ -23,6 +23,7 @@
 using Nancy;
 using OsmSharp.Osm.Xml.v0_6;
 using System;
+using OsmSharp.Osm.API.Authentication;
 
 namespace OsmSharp.Osm.API
 {
@@ -64,6 +65,7 @@ namespace OsmSharp.Osm.API
             Get["{instance}/api/0.6/node/{id}/ways"] = _ => { return this.GetWaysForNode(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
+            Get["{instance}/api/0.6/user/{id}"] = _ => { return this.GetUserDetails(_); };
         }
 
         /// <summary>
@@ -410,6 +412,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -704,7 +707,14 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                // get id.
+                long id;
+                if (!long.TryParse(_.id, out id))
+                { // id was parsed.
+                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+                }
+
+                return instance.GetUser(id);
             }
             catch (Exception)
             { // an unhandled exception!

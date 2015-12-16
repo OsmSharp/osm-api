@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.API.Db.Domain;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm.API.Db
@@ -49,5 +50,10 @@ namespace OsmSharp.Osm.API.Db
         /// Gets the relation with the given id.
         /// </summary>
         Relation GetRelation(long id);
+
+        /// <summary>
+        /// Gets the user with the given id.
+        /// </summary>
+        User GetUser(long id);
     }
 }

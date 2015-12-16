@@ -23,6 +23,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.API.Db.Domain;
 
 namespace OsmSharp.Osm.API.Db
 {
@@ -34,6 +35,7 @@ namespace OsmSharp.Osm.API.Db
         private readonly List<Node> _nodes;
         private readonly List<Way> _ways;
         private readonly List<Relation> _relations;
+        private readonly List<User> _users;
 
         /// <summary>
         /// Creates a new memory db.
@@ -43,6 +45,7 @@ namespace OsmSharp.Osm.API.Db
             _nodes = new List<Node>();
             _ways = new List<Way>();
             _relations = new List<Relation>();
+            _users = new List<User>();
         }
 
         /// <summary>
@@ -245,6 +248,47 @@ namespace OsmSharp.Osm.API.Db
         public Relation GetRelation(long id)
         {
             return _relations.FirstOrDefault(x => x.Id == id);
+        }
+
+
+        /// <summary>
+        /// Adds new a new user.
+        /// </summary>
+        public User AddNewUser(User user)
+        {
+            var id = 1;
+            for (var i = 0; i < _users.Count; i++)
+            {
+                if (_users[i].Id > id)
+                {
+                    id = _users[i].Id + 1;
+                }
+            }
+            var newUser = new User()
+            {
+                Id = id,
+                AccountCreated = user.AccountCreated,
+                BlocksReceived = user.BlocksReceived,
+                ChangeSetCount = user.ChangeSetCount,
+                ContributorTermsAgreed = user.ContributorTermsAgreed,
+                ContributorTermsPublicDomain = user.ContributorTermsPublicDomain,
+                Description = user.Description,
+                DisplayName = user.DisplayName,
+                Home = user.Home,
+                Image = user.Image,
+                Roles = user.Roles,
+                TraceCount = user.TraceCount
+            };
+            _users.Add(newUser);
+            return newUser;
+        }
+
+        /// <summary>
+        /// Gets the user with the given id.
+        /// </summary>
+        public User GetUser(long id)
+        {
+            return _users.FirstOrDefault(x => x.Id == id);
         }
     }
 }
