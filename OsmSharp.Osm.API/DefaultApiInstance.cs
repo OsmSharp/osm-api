@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 
-// Copyright (c) 2015 Ben Abelshausen
+// Copyright (c) 2016 Ben Abelshausen
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,9 @@ namespace OsmSharp.Osm.API
         {
             _db = db;
         }
+
+        private long _nextChangesetId = 1;
+        private Dictionary<long, changeset> _openChangesets = new Dictionary<long, changeset>();
 
         /// <summary>
         /// Gets the capabilities.
@@ -210,6 +213,21 @@ namespace OsmSharp.Osm.API
                 versionSpecified = true,
                 user = user.ToXmlUser()
             };
+        }
+
+        /// <summary>
+        /// Creates a new changeset.
+        /// </summary>
+        public long CreateChangeset(changeset changeset)
+        {
+            lock(_openChangesets)
+            {
+                var id = _nextChangesetId;
+                _nextChangesetId++;
+
+                _openChangesets.Add(id, changeset);
+                return id;
+            }
         }
     }
 }

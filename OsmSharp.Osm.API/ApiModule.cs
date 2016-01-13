@@ -21,9 +21,11 @@
 // THE SOFTWARE.
 
 using Nancy;
+using Nancy.ModelBinding;
 using OsmSharp.Osm.Xml.v0_6;
 using System;
 using OsmSharp.Osm.API.Authentication;
+using System.Collections.Generic;
 
 namespace OsmSharp.Osm.API
 {
@@ -202,7 +204,26 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                var osm = this.Bind<osm>();
+
+                var tags = new List<tag>();
+                if(osm != null &&
+                   osm.changeset != null)
+                {
+                    foreach(var c in osm.changeset)
+                    {
+                        foreach(var tag in c.tag)
+                        {
+                            tags.Add(tag);
+                        }
+                    }
+                }
+
+                var changeset = osm.changeset[0];
+                changeset.tag = tags.ToArray();
+
+                var id = instance.CreateChangeset(changeset);
+                return id.ToInvariantString();
             }
             catch (Exception)
             { // an unhandled exception!
@@ -394,7 +415,9 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                var osmChange = this.Bind<osmChange>();
+
+                return instance.ApplyChangeset(osmChange);
             }
             catch (Exception)
             { // an unhandled exception!

@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 
-// Copyright (c) 2015 Ben Abelshausen
+// Copyright (c) 2016 Ben Abelshausen
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,5 +60,15 @@ namespace OsmSharp.Osm.API
         /// Gets the user with the given id.
         /// </summary>
         osm GetUser(long id);
+
+        /// <summary>
+        /// Opens a new changeset.
+        /// </summary>
+        long CreateChangeset(changeset changeset);
+
+        /// <summary>
+        /// Applies a changeset.
+        /// </summary>
+        diffResult ApplyChangeset(osmChange osmChange);
     }
 }
