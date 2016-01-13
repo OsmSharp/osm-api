@@ -77,17 +77,18 @@ namespace OsmSharp.Osm.API.Db
         public IEnumerable<OsmGeo> GetInsideBox(GeoCoordinateBox box)
         {
             var nodesInBox = new HashSet<long>();
-            var found = new List<OsmGeo>();
+            var nodesToInclude = new HashSet<long>();
+            var waysToInclude = new HashSet<long>();
+            var relationsToInclude = new HashSet<long>();
+
             for(var i = 0; i < _nodes.Count; i++)
             {
                 if (box.Contains(_nodes[i].Longitude.Value, _nodes[i].Latitude.Value))
                 {
-                    found.Add(_nodes[i]);
                     nodesInBox.Add(_nodes[i].Id.Value);
                 }
             }
-
-            var waysInBox = new HashSet<long>();
+            
             for (var i = 0; i < _ways.Count; i++)
             {
                 if (_ways[i].Nodes != null)
@@ -96,8 +97,11 @@ namespace OsmSharp.Osm.API.Db
                     {
                         if (nodesInBox.Contains(_ways[i].Nodes[n]))
                         {
-                            found.Add(_ways[i]);
-                            waysInBox.Add(_ways[i].Id.Value);
+                            waysToInclude.Add(_ways[i].Id.Value);
+                            for(var n1 = 0; n1 < _ways[i].Nodes.Count; n1++)
+                            {
+                                nodesToInclude.Add(_ways[i].Nodes[n1]);
+                            }
                             break;
                         }
                     }
@@ -120,7 +124,7 @@ namespace OsmSharp.Osm.API.Db
                                 }
                                 break;
                             case OsmGeoType.Way:
-                                if (waysInBox.Contains(member.MemberId.Value))
+                                if (waysToInclude.Contains(member.MemberId.Value))
                                 {
                                     relationFound = true;
                                 }
@@ -128,13 +132,17 @@ namespace OsmSharp.Osm.API.Db
                         }
                         if (relationFound)
                         {
-                            found.Add(_relations[i]);
+                            relationsToInclude.Add(_relations[i].Id.Value);
                             break;
                         }
                     }
                 }
             }
 
+            var found = new List<OsmGeo>();
+            found.AddRange(_nodes.Where(x => nodesInBox.Contains(x.Id.Value) || nodesToInclude.Contains(x.Id.Value)));
+            found.AddRange(_ways.Where(x => waysToInclude.Contains(x.Id.Value)));
+            found.AddRange(_relations.Where(x => relationsToInclude.Contains(x.Id.Value)));
             return found;
         }
 
