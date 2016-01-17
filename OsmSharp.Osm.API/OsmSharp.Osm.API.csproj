@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiBootstrapper.cs" />
+    <Compile Include="ApiResult.cs" />
+    <Compile Include="ApiModuleExtensions.cs" />
     <Compile Include="Authentication\AuthenticationHandler.cs" />
     <Compile Include="Db\Domain\Block.cs" />
     <Compile Include="Db\Domain\Home.cs" />

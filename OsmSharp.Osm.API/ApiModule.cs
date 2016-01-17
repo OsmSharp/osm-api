@@ -88,7 +88,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return instance.GetCapabilities();
+                return this.BuildResponse(instance.GetCapabilities());
             }
             catch (Exception)
             { // an unhandled exception!
@@ -143,12 +143,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.BadRequest);
                 }
 
-                var result = instance.GetMap(left, bottom, right, top);
-                if(result == null)
-                {
-                    return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
-                }
-                return result;
+                return this.BuildResponse(instance.GetMap(left, bottom, right, top));
             }
             catch (Exception)
             { // an unhandled exception!
@@ -223,6 +218,10 @@ namespace OsmSharp.Osm.API
                 changeset.tag = tags.ToArray();
 
                 var id = instance.CreateChangeset(changeset);
+                if(id.IsError)
+                {
+                    return this.BuildResponse(id);
+                }
                 return id.ToInvariantString();
             }
             catch (Exception)
@@ -417,7 +416,7 @@ namespace OsmSharp.Osm.API
 
                 var osmChange = this.Bind<osmChange>();
 
-                return instance.ApplyChangeset(osmChange);
+                return this.BuildResponse(instance.ApplyChangeset(osmChange));
             }
             catch (Exception)
             { // an unhandled exception!
@@ -473,11 +472,11 @@ namespace OsmSharp.Osm.API
                 // get id.
                 long id;
                 if (!long.TryParse(_.elementid, out id))
-                { // id was parsed.
+                { // id could not be parsed.
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                osm result = null;
+                ApiResult<osm> result = null;
                 switch(type)
                 {
                     case OsmGeoType.Node:
@@ -491,12 +490,7 @@ namespace OsmSharp.Osm.API
                         break;
                 }
 
-                if(result == null)
-                {
-                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
-                }
-
-                return result;
+                return this.BuildResponse(result);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -733,11 +727,11 @@ namespace OsmSharp.Osm.API
                 // get id.
                 long id;
                 if (!long.TryParse(_.id, out id))
-                { // id was parsed.
+                { // id was not parsed.
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return instance.GetUser(id);
+                return this.BuildResponse(instance.GetUser(id));
             }
             catch (Exception)
             { // an unhandled exception!

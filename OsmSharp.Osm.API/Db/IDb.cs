@@ -37,9 +37,29 @@ namespace OsmSharp.Osm.API.Db
         IEnumerable<OsmGeo> GetInsideBox(GeoCoordinateBox geoCoordinateBox);
 
         /// <summary>
+        /// Adds a new node.
+        /// </summary>
+        Node AddNewNode(Node node);
+
+        /// <summary>
         /// Gets the node with the given id.
         /// </summary>
         Node GetNode(long id);
+
+        /// <summary>
+        /// Updates the given node.
+        /// </summary>
+        bool UpdateNode(Node node);
+
+        /// <summary>
+        /// Deletes the node with the given id.
+        /// </summary>
+        bool DeleteNode(long id);
+
+        /// <summary>
+        /// Adds a new way.
+        /// </summary>
+        Way AddNewWay(Way way);
 
         /// <summary>
         /// Gets the way with the given id.
@@ -47,9 +67,34 @@ namespace OsmSharp.Osm.API.Db
         Way GetWay(long id);
 
         /// <summary>
+        /// Updates the given way.
+        /// </summary>
+        bool UpdateWay(Way way);
+
+        /// <summary>
+        /// Deletes the way with the given id.
+        /// </summary>
+        bool DeleteWay(long id);
+
+        /// <summary>
+        /// Adds a new relation.
+        /// </summary>
+        Relation AddNewRelation(Relation relation);
+
+        /// <summary>
         /// Gets the relation with the given id.
         /// </summary>
         Relation GetRelation(long id);
+
+        /// <summary>
+        /// Updates the given relation.
+        /// </summary>
+        bool UpdateRelation(Relation relation);
+
+        /// <summary>
+        /// Deletes the relation with the given id.
+        /// </summary>
+        bool DeleteRelation(long id);
 
         /// <summary>
         /// Gets the user with the given id.

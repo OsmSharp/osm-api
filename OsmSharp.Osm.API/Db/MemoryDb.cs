@@ -24,6 +24,7 @@ using System.Linq;
 using System.Collections.Generic;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.API.Db.Domain;
+using System;
 
 namespace OsmSharp.Osm.API.Db
 {
@@ -154,7 +155,7 @@ namespace OsmSharp.Osm.API.Db
             var id = 1L;
             for(var i = 0; i < _nodes.Count; i++)
             {
-                if(_nodes[i].Id > id)
+                if(_nodes[i].Id >= id)
                 {
                     id = _nodes[i].Id.Value + 1;
                 }
@@ -182,6 +183,34 @@ namespace OsmSharp.Osm.API.Db
         public Node GetNode(long id)
         {
             return _nodes.FirstOrDefault(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// Updates the given node.
+        /// </summary>
+        public bool UpdateNode(Node node)
+        {
+            for(var i = 0; i < _nodes.Count; i++)
+            {
+                if(_nodes[i].Id == node.Id.Value)
+                {
+                    if(_nodes[i].Version + 1 != node.Version)
+                    {
+                        throw new Exception("Version # doesn't match.");
+                    }
+                    _nodes[i] = node;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Deletes the node with the given id.
+        /// </summary>
+        public bool DeleteNode(long id)
+        {
+            return _nodes.RemoveAll(x => x.Id == id) > 0;
         }
 
         /// <summary>
@@ -222,6 +251,34 @@ namespace OsmSharp.Osm.API.Db
         }
 
         /// <summary>
+        /// Updates the given way.
+        /// </summary>
+        public bool UpdateWay(Way way)
+        {
+            for (var i = 0; i < _ways.Count; i++)
+            {
+                if (_ways[i].Id == way.Id.Value)
+                {
+                    if (_ways[i].Version + 1 != way.Version)
+                    {
+                        throw new Exception("Version # doesn't match.");
+                    }
+                    _ways[i] = way;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Deletes the way with the given id.
+        /// </summary>
+        public bool DeleteWay(long id)
+        {
+            return _ways.RemoveAll(x => x.Id == id) > 0;
+        }
+
+        /// <summary>
         /// Adds a new relation.
         /// </summary>
         public Relation AddNewRelation(Relation relation)
@@ -258,6 +315,33 @@ namespace OsmSharp.Osm.API.Db
             return _relations.FirstOrDefault(x => x.Id == id);
         }
 
+        /// <summary>
+        /// Updates the given relation.
+        /// </summary>
+        public bool UpdateRelation(Relation relation)
+        {
+            for (var i = 0; i < _relations.Count; i++)
+            {
+                if (_relations[i].Id == relation.Id.Value)
+                {
+                    if (_relations[i].Version + 1 != relation.Version)
+                    {
+                        throw new Exception("Version # doesn't match.");
+                    }
+                    _relations[i] = relation;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Deletes the relation with the given id.
+        /// </summary>
+        public bool DeleteRelation(long id)
+        {
+            return _relations.RemoveAll(x => x.Id == id) > 0;
+        }
 
         /// <summary>
         /// Adds new a new user.

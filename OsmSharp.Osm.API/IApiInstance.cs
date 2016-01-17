@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using OsmSharp.Osm.Xml.v0_6;
+using System;
 
 namespace OsmSharp.Osm.API
 {
@@ -33,42 +34,47 @@ namespace OsmSharp.Osm.API
         /// Gets the api capabilities.
         /// </summary>
         /// <returns></returns>
-        osm GetCapabilities();
+        ApiResult<osm> GetCapabilities();
 
         /// <summary>
         /// Gets all objects within the given bounding box.
         /// </summary>
         /// <returns></returns>
-        osm GetMap(double left, double bottom, double right, double top);
+        ApiResult<osm> GetMap(double left, double bottom, double right, double top);
 
         /// <summary>
         /// Gets the node with the given id.
         /// </summary>
-        osm GetNode(long id);
+        ApiResult<osm> GetNode(long id);
 
         /// <summary>
         /// Gets the way with the given id.
         /// </summary>
-        osm GetWay(long id);
+        ApiResult<osm> GetWay(long id);
 
         /// <summary>
         /// Gets the relation with the given id.
         /// </summary>
-        osm GetRelation(long id);
+        ApiResult<osm> GetRelation(long id);
 
         /// <summary>
         /// Gets the user with the given id.
         /// </summary>
-        osm GetUser(long id);
+        ApiResult<osm> GetUser(long id);
 
         /// <summary>
         /// Opens a new changeset.
         /// </summary>
-        long CreateChangeset(changeset changeset);
+        ApiResult<long> CreateChangeset(changeset changeset);
 
         /// <summary>
         /// Applies a changeset.
         /// </summary>
-        diffResult ApplyChangeset(osmChange osmChange);
+        ApiResult<diffResult> ApplyChangeset(osmChange osmChange);
+
+        /// <summary>
+        /// Validates a changeset against the current state of the data.
+        /// </summary>
+        ApiResult<bool> ValidateChangeset(osmChange osmChange);
     }
 }
