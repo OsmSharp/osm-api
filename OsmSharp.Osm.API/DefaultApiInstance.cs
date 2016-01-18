@@ -265,8 +265,11 @@ namespace OsmSharp.Osm.API
                             osmResults.Add(new noderesult()
                             {
                                 new_id = newNode.Id.Value,
+                                new_idSpecified = true,
                                 old_id = node.id,
-                                new_version = (int)newNode.Version.Value
+                                old_idSpecified = true,
+                                new_version = (int)newNode.Version.Value,
+                                new_versionSpecified = true
                             });
                         }
                     }
@@ -274,16 +277,26 @@ namespace OsmSharp.Osm.API
                     {
                         for (var w = 0; w < create.way.Length; w++)
                         {
-                            for(var n = 0; n < create.way[w].nd.Length; n++)
+                            var way = create.way[w];
+                            for(var n = 0; n < way.nd.Length; n++)
                             {
                                 long newId;
-                                if(nodeIds.TryGetValue(create.way[w].nd[n].@ref, out newId))
+                                if(nodeIds.TryGetValue(way.nd[n].@ref, out newId))
                                 {
-                                    create.way[w].nd[n].@ref = newId;
+                                   way.nd[n].@ref = newId;
                                 }
                             }
-                            var newWay = _db.AddNewWay(create.way[w].ConvertFrom());
-                            wayIds.Add(create.way[w].id, newWay.Id.Value);
+                            var newWay = _db.AddNewWay(way.ConvertFrom());
+                            wayIds.Add(way.id, newWay.Id.Value);
+                            osmResults.Add(new wayresult()
+                            {
+                                new_id = newWay.Id.Value,
+                                new_idSpecified = true,
+                                old_id = way.id,
+                                old_idSpecified = true,
+                                new_version = (int)newWay.Version.Value,
+                                new_versionSpecified = true
+                            });
                         }
                     }
                     if(create.relation != null)
@@ -314,6 +327,15 @@ namespace OsmSharp.Osm.API
 
                             var newRelation = _db.AddNewRelation(relation.ConvertFrom());
                             relationIds.Add(relation.id, newRelation.Id.Value);
+                            osmResults.Add(new relationresult()
+                            {
+                                new_id = newRelation.Id.Value,
+                                new_idSpecified = true,
+                                old_id = relation.id,
+                                old_idSpecified = true,
+                                new_version = (int)newRelation.Version.Value,
+                                new_versionSpecified = true
+                            });
                         }
                     }
                 }
@@ -327,14 +349,35 @@ namespace OsmSharp.Osm.API
                     for(var n = 0; n < modify.node.Length; n++)
                     {
                         _db.UpdateNode(modify.node[n].ConvertFrom());
+                        osmResults.Add(new noderesult()
+                        {
+                            old_id = modify.node[n].id,
+                            old_idSpecified = true,
+                            new_version = (int)modify.node[n].version + 1,
+                            new_versionSpecified = true
+                        });
                     }
                     for (var w = 0; w < modify.way.Length; w++)
                     {
                         _db.UpdateWay(modify.way[w].ConvertFrom());
+                        osmResults.Add(new wayresult()
+                        {
+                            old_id = modify.way[w].id,
+                            old_idSpecified = true,
+                            new_version = (int)modify.way[w].version + 1,
+                            new_versionSpecified = true
+                        });
                     }
                     for (var r = 0; r < modify.relation.Length; r++)
                     {
                         _db.UpdateRelation(modify.relation[r].ConvertFrom());
+                        osmResults.Add(new relationresult()
+                        {
+                            old_id = modify.relation[r].id,
+                            old_idSpecified = true,
+                            new_version = (int)modify.relation[r].version + 1,
+                            new_versionSpecified = true
+                        });
                     }
                 }
             }
@@ -348,21 +391,39 @@ namespace OsmSharp.Osm.API
                     {
                         for (var j = 0; j < delete.node.Length; j++)
                         {
-                            _db.DeleteNode(delete.node[j].id);
+                            var node = delete.node[j];
+                            _db.DeleteNode(node.id);
+                            osmResults.Add(new noderesult()
+                            {
+                                old_id = node.id,
+                                old_idSpecified = true
+                            });
                         }
                     }
                     if (delete.way != null)
                     {
                         for (var j = 0; j < delete.way.Length; j++)
                         {
-                            _db.DeleteWay(delete.way[j].id);
+                            var way = delete.way[j];
+                            _db.DeleteWay(way.id);
+                            osmResults.Add(new wayresult()
+                            {
+                                old_id = way.id,
+                                old_idSpecified = true
+                            });
                         }
                     }
                     if (delete.relation != null)
                     {
                         for (var j = 0; j < delete.relation.Length; j++)
                         {
-                            _db.DeleteRelation(delete.relation[j].id);
+                            var relation = delete.relation[j];
+                            _db.DeleteRelation(relation.id);
+                            osmResults.Add(new relationresult()
+                            {
+                                old_id = relation.id,
+                                old_idSpecified = true
+                            });
                         }
                     }
                 }
@@ -370,6 +431,9 @@ namespace OsmSharp.Osm.API
 
             return new ApiResult<diffResult>(new diffResult()
             {
+                version = 0.6,
+                versionSpecified = true,
+                generator = "OsmSharp",
                 osmresult = osmResults.ToArray()
             });
         }
