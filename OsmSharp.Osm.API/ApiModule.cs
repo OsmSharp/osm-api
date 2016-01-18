@@ -22,9 +22,9 @@
 
 using Nancy;
 using Nancy.ModelBinding;
+using OsmSharp.Osm.API.Authentication;
 using OsmSharp.Osm.Xml.v0_6;
 using System;
-using OsmSharp.Osm.API.Authentication;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm.API
@@ -46,6 +46,7 @@ namespace OsmSharp.Osm.API
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
             Get["{instance}/api/0.6/permissions"] = _ => { return this.GetPermissions(_); };
             Put["{instance}/api/0.6/changeset/create"] = _ => { return this.PutChangesetCreate(_); };
+            Put["{instance}/api/0.6/changeset/{changesetid}/close"] = _ => { return this.PutChangesetClose(_); };
             Get["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.GetChangeset(_); };
             Put["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.PutChangesetUpdate(_); };
             Get["{instance}/api/0.6/changeset/{changesetid}/download"] = _ => { return this.GetChangesetDownload(_); };
@@ -59,13 +60,23 @@ namespace OsmSharp.Osm.API
             Put["{instance}/api/0.6/node/{elementid}"] = _ => { return this.PutElementUpdate(_); };
             Put["{instance}/api/0.6/way/{elementid}"] = _ => { return this.PutElementUpdate(_); };
             Put["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.PutElementUpdate(_); };
-            Delete["{instance}/api/0.6/[node|way|relation]/{elementid}"] = _ => { return this.DeleteElement(_); };
-            Get["{instance}/api/0.6/[node|way|relation]/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
-            Get["{instance}/api/0.6/[node|way|relation]/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
+            Delete["{instance}/api/0.6/node/{elementid}"] = _ => { return this.DeleteElement(_); };
+            Delete["{instance}/api/0.6/way/{elementid}"] = _ => { return this.DeleteElement(_); };
+            Delete["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.DeleteElement(_); };
+            Get["{instance}/api/0.6/node/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
+            Get["{instance}/api/0.6/way/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
+            Get["{instance}/api/0.6/relation/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
+            Get["{instance}/api/0.6/node/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
+            Get["{instance}/api/0.6/way/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
+            Get["{instance}/api/0.6/relation/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
             Get["{instance}/api/0.6/[node|way|relation]"] = _ => { return this.GetElementMultiple(_); };
-            Get["{instance}/api/0.6/[node|way|relation]/{elementid}/relations"] = _ => { return this.GetElementFull(_); };
+            Get["{instance}/api/0.6/node/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
+            Get["{instance}/api/0.6/way/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
+            Get["{instance}/api/0.6/relation/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
+            Get["{instance}/api/0.6/node/{elementid}/full"] = _ => { return this.GetElementFull(_); };
+            Get["{instance}/api/0.6/way/{elementid}/full"] = _ => { return this.GetElementFull(_); };
+            Get["{instance}/api/0.6/relation/{elementid}/full"] = _ => { return this.GetElementFull(_); };
             Get["{instance}/api/0.6/node/{id}/ways"] = _ => { return this.GetWaysForNode(_); };
-            Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
             Get["{instance}/api/0.6/user/{id}"] = _ => { return this.GetUserDetails(_); };
         }
@@ -173,7 +184,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -222,7 +233,7 @@ namespace OsmSharp.Osm.API
                 {
                     return this.BuildResponse(id);
                 }
-                return id.ToInvariantString();
+                return id.Data.ToInvariantString();
             }
             catch (Exception)
             { // an unhandled exception!
@@ -247,8 +258,8 @@ namespace OsmSharp.Osm.API
                 { // oeps, instance not active!
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
-
-                return null;
+                
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -274,7 +285,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -300,7 +311,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -326,7 +337,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -352,7 +363,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -443,7 +454,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -516,7 +527,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -542,7 +553,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -568,7 +579,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -594,7 +605,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -620,7 +631,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -646,7 +657,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -672,7 +683,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -698,7 +709,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -757,7 +768,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!
@@ -783,7 +794,7 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return null;
+                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
             catch (Exception)
             { // an unhandled exception!

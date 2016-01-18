@@ -34,12 +34,15 @@ namespace OsmSharp.Osm.API.Tests.Mocks
         private List<Node> _nodes;
         private List<Way> _ways;
         private List<Relation> _relations;
+        private List<changeset> _changesets;
 
         public MockApiInstance(IEnumerable<Node> nodes, IEnumerable<Way> ways, IEnumerable<Relation> relations)
         {
-            _nodes = new List<Node>(nodes);
-            _ways = new List<Way>(ways);
-            _relations = new List<Relation>(relations);
+            if (nodes != null) { _nodes = new List<Node>(nodes); }
+            if (ways != null) { _ways = new List<Way>(ways); }
+            if (relations != null) { _relations = new List<Relation>(relations); }
+
+            _changesets = new List<changeset>();
         }
 
         public ApiResult<diffResult> ApplyChangeset(osmChange osmChange)
@@ -49,12 +52,22 @@ namespace OsmSharp.Osm.API.Tests.Mocks
 
         public ApiResult<long> CreateChangeset(changeset changeset)
         {
-            throw new NotImplementedException();
+            _changesets.Add(changeset);
+            return new ApiResult<long>(_changesets.Count);
         }
 
         public ApiResult<osm> GetCapabilities()
         {
-            throw new NotImplementedException();
+            return new ApiResult<osm>(new osm()
+            {
+                api = this.Capabilities
+            });
+        }
+
+        public api Capabilities
+        {
+            get;
+            set;
         }
 
         public ApiResult<osm> GetMap(double left, double bottom, double right, double top)

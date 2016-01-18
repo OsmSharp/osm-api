@@ -149,7 +149,7 @@ namespace OsmSharp.Osm.API
             var node = _db.GetNode(id);
             if(node == null)
             {
-                return null;
+                return new ApiResult<osm>(ApiResultStatusCode.NotFound, "Node not found.");
             }
             return new ApiResult<osm>(new osm()
             {
@@ -168,7 +168,7 @@ namespace OsmSharp.Osm.API
             var way = _db.GetWay(id);
             if (way == null)
             {
-                return null;
+                return new ApiResult<osm>(ApiResultStatusCode.NotFound, "Way not found.");
             }
             return new ApiResult<osm>(new osm()
             {
@@ -187,7 +187,7 @@ namespace OsmSharp.Osm.API
             var relation = _db.GetRelation(id);
             if (relation == null)
             {
-                return null;
+                return new ApiResult<osm>(ApiResultStatusCode.NotFound, "Relation not found.");
             }
             return new ApiResult<osm>(new osm()
             {

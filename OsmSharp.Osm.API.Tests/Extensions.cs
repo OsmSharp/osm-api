@@ -22,6 +22,7 @@
 
 using Nancy.Testing;
 using OsmSharp.Osm.Xml.v0_6;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace OsmSharp.Osm.API.Tests
@@ -37,9 +38,31 @@ namespace OsmSharp.Osm.API.Tests
         /// <summary>
         /// Deserializes an osm response from a browser response.
         /// </summary>
-        public static osm DeserializeOsm(this BrowserResponse result)
+        public static osm DeserializeOsmXml(this BrowserResponse result)
         {
             return _osmXmlSerializer.Deserialize(result.Body.AsStream()) as osm;
+        }
+
+        /// <summary>
+        /// Deserializes a text response.
+        /// </summary>
+        public static string DeserializeAsString(this BrowserResponse result)
+        {
+            using (var streamReader = new StreamReader(result.Body.AsStream()))
+            {
+                return streamReader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// Adds the given osm object to the browser context.
+        /// </summary>
+        public static void OsmXmlBody(this BrowserContext context, osm osm)
+        {
+            var stream = new MemoryStream();
+            _osmXmlSerializer.Serialize(stream, osm);
+            stream.Seek(0, SeekOrigin.Begin);
+            context.Body(stream, contentType: "application/xml");
         }
     }
 }
