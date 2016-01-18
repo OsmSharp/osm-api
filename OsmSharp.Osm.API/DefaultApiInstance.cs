@@ -23,7 +23,6 @@
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.API.Db;
 using OsmSharp.Osm.Xml.v0_6;
-using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm.API
@@ -247,6 +246,7 @@ namespace OsmSharp.Osm.API
                     "Changeset could not be applied, validation failed.");
             }
 
+            var osmResults = new List<osmresult>();
             if (osmChange.create != null)
             {
                 var nodeIds = new Dictionary<long, long>();
@@ -259,8 +259,15 @@ namespace OsmSharp.Osm.API
                     {
                         for (var n = 0; n < create.node.Length; n++)
                         {
-                            var newNode = _db.AddNewNode(create.node[n].ConvertFrom());
-                            nodeIds.Add(create.node[n].id, newNode.Id.Value);
+                            var node = create.node[n];
+                            var newNode = _db.AddNewNode(node.ConvertFrom());
+                            nodeIds.Add(node.id, newNode.Id.Value);
+                            osmResults.Add(new noderesult()
+                            {
+                                new_id = newNode.Id.Value,
+                                old_id = node.id,
+                                new_version = (int)newNode.Version.Value
+                            });
                         }
                     }
                     if (create.way != null)
@@ -360,8 +367,11 @@ namespace OsmSharp.Osm.API
                     }
                 }
             }
-            
-            return null;
+
+            return new ApiResult<diffResult>(new diffResult()
+            {
+                osmresult = osmResults.ToArray()
+            });
         }
 
         /// <summary>

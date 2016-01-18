@@ -23,6 +23,7 @@
 using NUnit.Framework;
 using OsmSharp.Osm.API.Db;
 using OsmSharp.Osm.Xml.v0_6;
+using System;
 
 namespace OsmSharp.Osm.API.Tests
 {
@@ -145,6 +146,88 @@ namespace OsmSharp.Osm.API.Tests
             Assert.AreEqual(3, relation.member[2].@ref);
             Assert.AreEqual("yet_another_test", relation.member[2].role);
             Assert.AreEqual(memberType.relation, relation.member[2].type);
+        }
+
+        /// <summary>
+        /// Test opening a changeset.
+        /// </summary>
+        [Test]
+        public void TestOpenChangeset()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            var result = api.CreateChangeset(new changeset()
+            {
+                id = -1,
+                tag = new tag[]
+                {
+                    new tag()
+                    {
+                        k = "test_tag",
+                        v = "test_value"
+                    }
+                }
+            });
+
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.AreEqual(1, result.Data);
+        }
+
+        /// <summary>
+        /// Test applying a changeset and adding a node.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetAddNode()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                create = new create[]
+                {
+                    new create()
+                    {
+                        node = new node[]
+                        {
+                            new node()
+                            {
+                                id = -1,
+                                idSpecified = true,
+                                lat = 10,
+                                latSpecified = true,
+                                lon = 100,
+                                lonSpecified = true,
+                                user = string.Empty,
+                                uid = 124,
+                                uidSpecified = true,
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                visible = true,
+                                visibleSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<noderesult>(osmresult);
+            var noderesult = osmresult as noderesult;
+            Assert.AreEqual(-1, noderesult.old_id);
+            Assert.AreEqual(1, noderesult.new_id);
+            Assert.AreEqual(1, noderesult.new_version);
         }
     }
 }
