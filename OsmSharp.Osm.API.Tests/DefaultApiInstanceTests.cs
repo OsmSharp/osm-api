@@ -579,5 +579,270 @@ namespace OsmSharp.Osm.API.Tests
             Assert.IsTrue(noderesult.new_versionSpecified);
             Assert.AreEqual(2, noderesult.new_version);
         }
+
+        /// <summary>
+        /// Test applying a changeset and adding a relation.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetAddRelation()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                create = new create[]
+                {
+                    new create()
+                    {
+                        relation = new relation[]
+                        {
+                            new relation()
+                            {
+                                id = -1,
+                                idSpecified = true,
+                                user = string.Empty,
+                                uid = 124,
+                                uidSpecified = true,
+                                member = new member[]
+                                {
+                                    new member()
+                                    {
+                                        @ref = 1,
+                                        refSpecified = true,
+                                        role = "test_role",
+                                        type = memberType.node,
+                                        typeSpecified = true
+                                    },
+                                    new member()
+                                    {
+                                        @ref = 2,
+                                        refSpecified = true,
+                                        role = "another_test_role",
+                                        type = memberType.way,
+                                        typeSpecified = true
+                                    }
+                                },
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                visible = true,
+                                visibleSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<relationresult>(osmresult);
+            var noderesult = osmresult as relationresult;
+            Assert.AreEqual(-1, noderesult.old_id);
+            Assert.IsTrue(noderesult.old_idSpecified);
+            Assert.AreEqual(1, noderesult.new_id);
+            Assert.IsTrue(noderesult.new_idSpecified);
+            Assert.AreEqual(1, noderesult.new_version);
+            Assert.IsTrue(noderesult.new_versionSpecified);
+        }
+
+        /// <summary>
+        /// Test applying a changeset and deleting a relation.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetDeleteRelation()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            db.AddNewRelation(new Relation()
+            {
+                Id = -1,
+                Members = new System.Collections.Generic.List<RelationMember>(
+                    new RelationMember[]
+                    {
+                        new RelationMember()
+                        {
+                            MemberId = 1,
+                            MemberRole = "test_role",
+                            MemberType = OsmGeoType.Node
+                        },
+                        new RelationMember()
+                        {
+                            MemberId = 2,
+                            MemberRole = "another_test_role",
+                            MemberType = OsmGeoType.Way
+                        }
+                    }),
+                TimeStamp = DateTime.Now.AddYears(-1)
+            });
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                delete = new delete[]
+                {
+                    new delete()
+                    {
+                        relation = new relation[]
+                        {
+                            new relation()
+                            {
+                                id = 1,
+                                idSpecified = true,
+                                user = string.Empty,
+                                uid = 124,
+                                uidSpecified = true,
+                                member = new member[]
+                                {
+                                    new member()
+                                    {
+                                        @ref = 1,
+                                        refSpecified = true,
+                                        role = "test_role",
+                                        type = memberType.node,
+                                        typeSpecified = true
+                                    },
+                                    new member()
+                                    {
+                                        @ref = 2,
+                                        refSpecified = true,
+                                        role = "another_test_role",
+                                        type = memberType.way,
+                                        typeSpecified = true
+                                    }
+                                },
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                version = 1,
+                                versionSpecified = true,
+                                visible = true,
+                                visibleSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<relationresult>(osmresult);
+            var noderesult = osmresult as relationresult;
+            Assert.AreEqual(1, noderesult.old_id);
+            Assert.IsTrue(noderesult.old_idSpecified);
+            Assert.IsFalse(noderesult.new_idSpecified);
+            Assert.IsFalse(noderesult.new_versionSpecified);
+        }
+
+        /// <summary>
+        /// Test applying a changeset and update a relation.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetUpdateRelation()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            db.AddNewRelation(new Relation()
+            {
+                Id = -1,
+                Members = new System.Collections.Generic.List<RelationMember>(
+                    new RelationMember[]
+                    {
+                        new RelationMember()
+                        {
+                            MemberId = 10,
+                            MemberRole = "test_role",
+                            MemberType = OsmGeoType.Node
+                        },
+                        new RelationMember()
+                        {
+                            MemberId = 20,
+                            MemberRole = "another_test_role",
+                            MemberType = OsmGeoType.Way
+                        }
+                    }),
+                TimeStamp = DateTime.Now.AddYears(-1)
+            });
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                modify = new modify[]
+                {
+                    new modify()
+                    {
+                        relation = new relation[]
+                        {
+                            new relation()
+                            {
+                                id = 1,
+                                idSpecified = true,
+                                user = string.Empty,
+                                uid = 124,
+                                uidSpecified = true,
+                                member = new member[]
+                                {
+                                    new member()
+                                    {
+                                        @ref = 1,
+                                        refSpecified = true,
+                                        role = "test_role",
+                                        type = memberType.node,
+                                        typeSpecified = true
+                                    },
+                                    new member()
+                                    {
+                                        @ref = 2,
+                                        refSpecified = true,
+                                        role = "another_test_role",
+                                        type = memberType.way,
+                                        typeSpecified = true
+                                    }
+                                },
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                version = 1,
+                                versionSpecified = true,
+                                visible = true,
+                                visibleSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<relationresult>(osmresult);
+            var noderesult = osmresult as relationresult;
+            Assert.AreEqual(1, noderesult.old_id);
+            Assert.IsTrue(noderesult.old_idSpecified);
+            Assert.AreEqual(1, noderesult.new_id);
+            Assert.IsTrue(noderesult.new_idSpecified);
+            Assert.AreEqual(2, noderesult.new_version);
+            Assert.IsTrue(noderesult.new_versionSpecified);
+        }
     }
 }
