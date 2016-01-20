@@ -47,8 +47,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OsmSharp.Osm, Version=1.2.0.117, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.1.2.0-rc1-0117\lib\net45\OsmSharp.Osm.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\osmsharp\core\Output\OsmSharp.Osm.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
@@ -79,10 +79,12 @@
     <Compile Include="IApiInstance.cs" />
     <Compile Include="ApiModule.cs" />
     <Compile Include="Db\IDb.cs" />
+    <Compile Include="NancyCustomBootstrapper.cs" />
     <Compile Include="NancyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\DiffResultXmlResponse.cs" />
     <Compile Include="Responses\OsmXmlResponse.cs" />
-    <Compile Include="Responses\OsmXmlResponseProcessor.cs" />
+    <Compile Include="Responses\ResponseProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

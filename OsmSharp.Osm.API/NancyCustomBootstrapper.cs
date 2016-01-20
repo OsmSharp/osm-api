@@ -20,40 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Collections.Generic;using Nancy.TinyIoc;
+using Nancy;
+using Nancy.Bootstrapper;
+using Nancy.Diagnostics;
+using Nancy.TinyIoc;
 
 namespace OsmSharp.Osm.API
 {
-    /// <summary>
-    /// The API boostrapper.
-    /// </summary>
-    public static class ApiBootstrapper
+    public class NancyCustomBootstrapper : DefaultNancyBootstrapper
     {
-        private static Dictionary<string, IApiInstance> _instances = 
-            new Dictionary<string,IApiInstance>();
-
-        /// <summary>
-        /// Sets the api instances.
-        /// </summary>
-        public static void SetInstance(string name, IApiInstance instance)
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
         {
-            _instances[name] = instance;
+            get { return new DiagnosticsConfiguration { Password = @"password" }; }
         }
 
-        /// <summary>
-        /// Returns true when there is an active instance.
-        /// </summary>
-        public static bool IsActive(string name)
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            return _instances.ContainsKey(name);
-        }
-
-        /// <summary>
-        /// Gets the api instance.
-        /// </summary>
-        public static bool TryGetInstance(string name, out IApiInstance instance)
-        {
-            return _instances.TryGetValue(name, out instance);
+            StaticConfiguration.EnableRequestTracing = true;
         }
     }
 }

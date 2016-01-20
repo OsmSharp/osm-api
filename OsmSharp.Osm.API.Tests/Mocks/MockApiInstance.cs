@@ -45,7 +45,7 @@ namespace OsmSharp.Osm.API.Tests.Mocks
             _changesets = new List<changeset>();
         }
 
-        public ApiResult<diffResult> ApplyChangeset(osmChange osmChange)
+        public ApiResult<diffResult> ApplyChangeset(long id, osmChange osmChange)
         {
             throw new NotImplementedException();
         }
@@ -129,6 +129,11 @@ namespace OsmSharp.Osm.API.Tests.Mocks
         }
 
         public ApiResult<bool> ValidateChangeset(osmChange osmChange)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApiResult<bool> CloseChangeset(long id)
         {
             throw new NotImplementedException();
         }

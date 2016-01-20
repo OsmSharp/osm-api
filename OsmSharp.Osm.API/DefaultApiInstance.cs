@@ -24,6 +24,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.API.Db;
 using OsmSharp.Osm.Xml.v0_6;
 using System.Collections.Generic;
+using System;
 
 namespace OsmSharp.Osm.API
 {
@@ -232,15 +233,15 @@ namespace OsmSharp.Osm.API
         /// <summary>
         /// Applies the given changeset.
         /// </summary>
-        public ApiResult<diffResult> ApplyChangeset(osmChange osmChange)
+        public ApiResult<diffResult> ApplyChangeset(long id, osmChange osmChange)
         {
             // validate changeset.
             var validated = this.ValidateChangeset(osmChange);
-            if(validated.IsError)
+            if (validated.IsError)
             {
                 return validated.Convert<diffResult>();
             }
-            if(!validated.Data)
+            if (!validated.Data)
             {
                 return new ApiResult<diffResult>(ApiResultStatusCode.Exception,
                     "Changeset could not be applied, validation failed.");
@@ -278,12 +279,12 @@ namespace OsmSharp.Osm.API
                         for (var w = 0; w < create.way.Length; w++)
                         {
                             var way = create.way[w];
-                            for(var n = 0; n < way.nd.Length; n++)
+                            for (var n = 0; n < way.nd.Length; n++)
                             {
                                 long newId;
-                                if(nodeIds.TryGetValue(way.nd[n].@ref, out newId))
+                                if (nodeIds.TryGetValue(way.nd[n].@ref, out newId))
                                 {
-                                   way.nd[n].@ref = newId;
+                                    way.nd[n].@ref = newId;
                                 }
                             }
                             var newWay = _db.AddNewWay(way.ConvertFrom());
@@ -299,12 +300,12 @@ namespace OsmSharp.Osm.API
                             });
                         }
                     }
-                    if(create.relation != null)
+                    if (create.relation != null)
                     {
-                        for(var r = 0; r < create.relation.Length; r++)
+                        for (var r = 0; r < create.relation.Length; r++)
                         {
                             var relation = create.relation[r];
-                            for(var m = 0; m < relation.member.Length; m++)
+                            for (var m = 0; m < relation.member.Length; m++)
                             {
                                 var member = relation.member[m];
                                 long newNodeId;
@@ -341,9 +342,9 @@ namespace OsmSharp.Osm.API
                 }
             }
 
-            if(osmChange.modify != null)
+            if (osmChange.modify != null)
             {
-                for(var i = 0; i < osmChange.modify.Length; i++)
+                for (var i = 0; i < osmChange.modify.Length; i++)
                 {
                     var modify = osmChange.modify[i];
                     if (modify.node != null)
@@ -564,7 +565,8 @@ namespace OsmSharp.Osm.API
                         for (var i = 0; i < delete.node.Length; i++)
                         {
                             var node = _db.GetNode(delete.node[i].id);
-                            if (node.Version != delete.node[i].version)
+                            if (node == null || 
+                                node.Version != delete.node[i].version)
                             {
                                 return new ApiResult<bool>(false);
                             }
@@ -576,7 +578,8 @@ namespace OsmSharp.Osm.API
                         for (var i = 0; i < delete.way.Length; i++)
                         {
                             var way = _db.GetWay(delete.way[i].id);
-                            if (way.Version != delete.way[i].version)
+                            if (way == null || 
+                                way.Version != delete.way[i].version)
                             {
                                 return new ApiResult<bool>(false);
                             }
@@ -588,7 +591,8 @@ namespace OsmSharp.Osm.API
                         for (var i = 0; i < delete.relation.Length; i++)
                         {
                             var relation = _db.GetRelation(delete.relation[i].id);
-                            if (relation.Version != delete.relation[i].version)
+                            if (relation == null || 
+                                relation.Version != delete.relation[i].version)
                             {
                                 return new ApiResult<bool>(false);
                             }
@@ -597,6 +601,11 @@ namespace OsmSharp.Osm.API
                 }
             }
 
+            return new ApiResult<bool>(true);
+        }
+
+        public ApiResult<bool> CloseChangeset(long id)
+        {
             return new ApiResult<bool>(true);
         }
     }

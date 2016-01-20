@@ -31,7 +31,7 @@ namespace OsmSharp.Osm.API.Responses
     /// <summary>
     /// A response processor to format OSM-XML.
     /// </summary>
-    public class OsmXmlResponseProcessor : IResponseProcessor
+    public class ResponseProcessor : IResponseProcessor
     {
         private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
             new[] { new Tuple<string, MediaRange>("xml", new MediaRange("application/xml")) };
@@ -39,7 +39,7 @@ namespace OsmSharp.Osm.API.Responses
         /// <summary>
         /// Creates a new OSM-XML repsonse processor.
         /// </summary>
-        public OsmXmlResponseProcessor()
+        public ResponseProcessor()
         {
 
         }
@@ -82,6 +82,26 @@ namespace OsmSharp.Osm.API.Responses
                     };
                 }
             }
+            if (model is diffResult)
+            {
+                if (IsExactXmlContentType(requestedMediaRange))
+                {
+                    return new ProcessorMatch
+                    {
+                        ModelResult = MatchResult.ExactMatch,
+                        RequestedContentTypeResult = MatchResult.ExactMatch
+                    };
+                }
+
+                if (IsWildcardXmlContentType(requestedMediaRange))
+                {
+                    return new ProcessorMatch
+                    {
+                        ModelResult = MatchResult.ExactMatch,
+                        RequestedContentTypeResult = MatchResult.NonExactMatch
+                    };
+                }
+            }
             return new ProcessorMatch
             {
                 ModelResult = MatchResult.DontCare,
@@ -101,6 +121,10 @@ namespace OsmSharp.Osm.API.Responses
             if (model is osm)
             {
                 return new OsmXmlResponse(model);
+            }
+            if (model is diffResult)
+            {
+                return new DiffResultXmlResponse(model);
             }
             throw new ArgumentOutOfRangeException("OsmXmlResponseProcessor can only process osm-objects.");
         }

@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using Nancy.Hosting.Self;
+using OsmSharp.Collections.Tags;
 using System;
 using System.IO;
 
@@ -37,6 +38,24 @@ namespace OsmSharp.Osm.API.Selfhost
                 var source = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
                 db.LoadFrom(source);
             }
+
+            //db.LoadFrom(new OsmGeo[]
+            //{
+            //    new Node()
+            //    {
+            //        Id = 1,
+            //        Latitude = 51.266211413970844,
+            //        Longitude  =4.791626930236816,
+            //        ChangeSetId = 1,
+            //        Tags = new TagsCollection(
+            //            Tag.Create("amenity", "village")),
+            //        UserId = 1,
+            //        UserName = "Ben",
+            //        Version = 1,
+            //        Visible= true,
+            //        TimeStamp = DateTime.Now                    
+            //    }
+            //});
 
             db.AddNewUser(new Db.Domain.User()
                 {

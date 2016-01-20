@@ -311,7 +311,12 @@ namespace OsmSharp.Osm.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+                var result = instance.CloseChangeset((long)_.changesetid);
+                if(result.IsError)
+                {
+                    return this.BuildResponse(result);
+                }
+                return string.Empty;
             }
             catch (Exception)
             { // an unhandled exception!
@@ -427,7 +432,7 @@ namespace OsmSharp.Osm.API
 
                 var osmChange = this.Bind<osmChange>();
 
-                return this.BuildResponse(instance.ApplyChangeset(osmChange));
+                return this.BuildResponse(instance.ApplyChangeset((long)_.changesetid, osmChange));
             }
             catch (Exception)
             { // an unhandled exception!

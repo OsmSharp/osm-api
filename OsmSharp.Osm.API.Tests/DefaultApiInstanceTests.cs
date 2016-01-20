@@ -215,7 +215,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -281,7 +281,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -346,7 +346,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -413,7 +413,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -487,7 +487,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -562,7 +562,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -635,7 +635,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -732,7 +732,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
@@ -827,7 +827,7 @@ namespace OsmSharp.Osm.API.Tests
                 }
             };
 
-            var result = api.ApplyChangeset(osmChange);
+            var result = api.ApplyChangeset(changesetResult.Data, osmChange);
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);

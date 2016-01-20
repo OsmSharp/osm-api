@@ -70,7 +70,12 @@ namespace OsmSharp.Osm.API
         /// <summary>
         /// Applies a changeset.
         /// </summary>
-        ApiResult<diffResult> ApplyChangeset(osmChange osmChange);
+        ApiResult<diffResult> ApplyChangeset(long id, osmChange osmChange);
+
+        /// <summary>
+        /// Closes the given changeset.
+        /// </summary>
+        ApiResult<bool> CloseChangeset(long id);
 
         /// <summary>
         /// Validates a changeset against the current state of the data.

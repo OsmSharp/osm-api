@@ -20,12 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using Nancy;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OsmSharp.Osm.API
 {
@@ -48,7 +43,7 @@ namespace OsmSharp.Osm.API
                 }
                 return module.Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
-            return result.Data;
+            return module.Negotiate.WithStatusCode(HttpStatusCode.OK).WithModel(result.Data);
         }
     }
 }

@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 using Nancy;
-using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Xml.v0_6;
 using System;
 using System.IO;
@@ -33,7 +32,7 @@ namespace OsmSharp.Osm.API.Responses
     /// <summary>
     /// An OSM XML response.
     /// </summary>
-    public class OsmXmlResponse : Response
+    public class DiffResultXmlResponse : Response
     {
         /// <summary>
         /// Holds the default content type.
@@ -49,7 +48,7 @@ namespace OsmSharp.Osm.API.Responses
         /// <summary>
         /// Creates a new OSM XML response.
         /// </summary>
-        public OsmXmlResponse(osm model)
+        public DiffResultXmlResponse(diffResult model)
         {
             this.Contents = model == null ? NoBody : GetXmlContents(model);
             this.ContentType = DefaultContentType;
@@ -60,20 +59,20 @@ namespace OsmSharp.Osm.API.Responses
         /// Gets a stream for a given feature collection.
         /// </summary>
         /// <returns></returns>
-        private static Action<Stream> GetXmlContents(osm model)
+        private static Action<Stream> GetXmlContents(diffResult model)
         {
             return stream =>
             {
                 var emptyNamespace = new XmlSerializerNamespaces();
                 emptyNamespace.Add(String.Empty, String.Empty);
-                using (var writer = XmlWriter.Create(stream, OsmXmlResponse.XmlWriterSettings))
+                using (var writer = XmlWriter.Create(stream, DiffResultXmlResponse.XmlWriterSettings))
                 {
-                    OsmXmlResponse.Serializer.Serialize(writer, model, emptyNamespace);
+                    DiffResultXmlResponse.Serializer.Serialize(writer, model, emptyNamespace);
                 }
             };
         }
 
-        private static XmlSerializer Serializer = new XmlSerializer(typeof(osm), string.Empty);
+        private static XmlSerializer Serializer = new XmlSerializer(typeof(diffResult), string.Empty);
 
         /// <summary>
         /// The default xml writer settings.
