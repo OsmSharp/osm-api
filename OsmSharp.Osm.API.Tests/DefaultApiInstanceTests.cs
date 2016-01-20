@@ -225,8 +225,11 @@ namespace OsmSharp.Osm.API.Tests
             var osmresult = diffResult.osmresult[0];
             Assert.IsInstanceOf<noderesult>(osmresult);
             var noderesult = osmresult as noderesult;
+            Assert.IsTrue(noderesult.old_idSpecified);
             Assert.AreEqual(-1, noderesult.old_id);
+            Assert.IsTrue(noderesult.new_idSpecified);
             Assert.AreEqual(1, noderesult.new_id);
+            Assert.IsTrue(noderesult.new_versionSpecified);
             Assert.AreEqual(1, noderesult.new_version);
         }
 
@@ -353,6 +356,222 @@ namespace OsmSharp.Osm.API.Tests
             var osmresult = diffResult.osmresult[0];
             Assert.IsInstanceOf<noderesult>(osmresult);
             var noderesult = osmresult as noderesult;
+            Assert.IsTrue(noderesult.old_idSpecified);
+            Assert.AreEqual(1, noderesult.old_id);
+            Assert.IsTrue(noderesult.new_idSpecified);
+            Assert.AreEqual(1, noderesult.new_id);
+            Assert.IsTrue(noderesult.new_versionSpecified);
+            Assert.AreEqual(2, noderesult.new_version);
+        }
+
+        /// <summary>
+        /// Test applying a changeset and adding a way.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetAddWay()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                create = new create[]
+                {
+                    new create()
+                    {
+                        way = new way[]
+                        {
+                            new way()
+                            {
+                                id = -1,
+                                idSpecified = true,
+                                user = string.Empty,
+                                uid = 124,
+                                uidSpecified = true,
+                                nd = new nd[]
+                                {
+                                    new nd()
+                                    {
+                                        @ref = 1,
+                                        refSpecified = true
+                                    },
+                                    new nd()
+                                    {
+                                        @ref = 2,
+                                        refSpecified = true
+                                    }
+                                },
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                visible = true,
+                                visibleSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<wayresult>(osmresult);
+            var noderesult = osmresult as wayresult;
+            Assert.AreEqual(-1, noderesult.old_id);
+            Assert.AreEqual(1, noderesult.new_id);
+            Assert.AreEqual(1, noderesult.new_version);
+        }
+
+        /// <summary>
+        /// Test applying a changeset and deleting a way.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetDeleteWay()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            var id = db.AddNewWay(new Way()
+            {
+                Id = -1,
+                Nodes = new System.Collections.Generic.List<long>(
+                    new long[] { 1, 3 }),
+                TimeStamp = DateTime.Now.AddYears(-1)
+            }).Id.Value;
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                delete = new delete[]
+                {
+                    new delete()
+                    {
+                        way = new way[]
+                        {
+                            new way()
+                            {
+                                id = 1,
+                                idSpecified = true,
+                                user = string.Empty,
+                                uid = 124,
+                                uidSpecified = true,
+                                nd = new nd[]
+                                {
+                                    new nd()
+                                    {
+                                        @ref = 1,
+                                        refSpecified = true
+                                    },
+                                    new nd()
+                                    {
+                                        @ref = 3,
+                                        refSpecified = true
+                                    }
+                                },
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                visible = true,
+                                visibleSpecified = true,
+                                version = 1,
+                                versionSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<wayresult>(osmresult);
+            var noderesult = osmresult as wayresult;
+            Assert.IsTrue(noderesult.old_idSpecified);
+            Assert.AreEqual(1, noderesult.old_id);
+            Assert.IsFalse(noderesult.new_idSpecified);
+            Assert.IsFalse(noderesult.new_versionSpecified);
+        }
+
+        /// <summary>
+        /// Test applying a changeset and updating a way.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetUpdateWay()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            var id = db.AddNewWay(new Way()
+            {
+                Id = -1,
+                Nodes = new System.Collections.Generic.List<long>(
+                    new long[] { 1, 3 }),
+                TimeStamp = DateTime.Now.AddYears(-1)
+            }).Id.Value;
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                modify = new modify[]
+                {
+                    new modify()
+                    {
+                        way = new way[]
+                        {
+                            new way()
+                            {
+                                id = 1,
+                                idSpecified = true,
+                                user = string.Empty,
+                                uid = 124,
+                                uidSpecified = true,
+                                nd = new nd[]
+                                {
+                                    new nd()
+                                    {
+                                        @ref = 1,
+                                        refSpecified = true
+                                    },
+                                    new nd()
+                                    {
+                                        @ref = 2,
+                                        refSpecified = true
+                                    }
+                                },
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                visible = true,
+                                visibleSpecified = true,
+                                version = 1,
+                                versionSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<wayresult>(osmresult);
+            var noderesult = osmresult as wayresult;
             Assert.IsTrue(noderesult.old_idSpecified);
             Assert.AreEqual(1, noderesult.old_id);
             Assert.IsTrue(noderesult.new_idSpecified);

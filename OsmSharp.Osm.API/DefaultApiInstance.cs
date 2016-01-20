@@ -526,7 +526,7 @@ namespace OsmSharp.Osm.API
                     {
                         for (var i = 0; i < modification.way.Length; i++)
                         {
-                            var way = _db.GetNode(modification.way[i].id);
+                            var way = _db.GetWay(modification.way[i].id);
                             if (way == null)
                             {
                                 return new ApiResult<bool>(false);
@@ -542,7 +542,7 @@ namespace OsmSharp.Osm.API
                     {
                         for (var i = 0; i < modification.relation.Length; i++)
                         {
-                            var relation = _db.GetNode(modification.relation[i].id);
+                            var relation = _db.GetRelation(modification.relation[i].id);
                             if (relation == null)
                             {
                                 return new ApiResult<bool>(false);
