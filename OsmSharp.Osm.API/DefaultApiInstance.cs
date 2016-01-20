@@ -346,38 +346,59 @@ namespace OsmSharp.Osm.API
                 for(var i = 0; i < osmChange.modify.Length; i++)
                 {
                     var modify = osmChange.modify[i];
-                    for(var n = 0; n < modify.node.Length; n++)
+                    if (modify.node != null)
                     {
-                        _db.UpdateNode(modify.node[n].ConvertFrom());
-                        osmResults.Add(new noderesult()
+                        for (var n = 0; n < modify.node.Length; n++)
                         {
-                            old_id = modify.node[n].id,
-                            old_idSpecified = true,
-                            new_version = (int)modify.node[n].version + 1,
-                            new_versionSpecified = true
-                        });
+                            var node = modify.node[n];
+                            node.version = node.version + 1;
+                            _db.UpdateNode(node.ConvertFrom());
+                            osmResults.Add(new noderesult()
+                            {
+                                old_id = node.id,
+                                old_idSpecified = true,
+                                new_id = node.id,
+                                new_idSpecified = true,
+                                new_version = (int)node.version,
+                                new_versionSpecified = true
+                            });
+                        }
                     }
-                    for (var w = 0; w < modify.way.Length; w++)
+                    if (modify.way != null)
                     {
-                        _db.UpdateWay(modify.way[w].ConvertFrom());
-                        osmResults.Add(new wayresult()
+                        for (var w = 0; w < modify.way.Length; w++)
                         {
-                            old_id = modify.way[w].id,
-                            old_idSpecified = true,
-                            new_version = (int)modify.way[w].version + 1,
-                            new_versionSpecified = true
-                        });
+                            var way = modify.way[w];
+                            way.version = way.version + 1;
+                            _db.UpdateWay(way.ConvertFrom());
+                            osmResults.Add(new wayresult()
+                            {
+                                old_id = way.id,
+                                old_idSpecified = true,
+                                new_id = way.id,
+                                new_idSpecified = true,
+                                new_version = (int)way.version,
+                                new_versionSpecified = true
+                            });
+                        }
                     }
-                    for (var r = 0; r < modify.relation.Length; r++)
+                    if (modify.relation != null)
                     {
-                        _db.UpdateRelation(modify.relation[r].ConvertFrom());
-                        osmResults.Add(new relationresult()
+                        for (var r = 0; r < modify.relation.Length; r++)
                         {
-                            old_id = modify.relation[r].id,
-                            old_idSpecified = true,
-                            new_version = (int)modify.relation[r].version + 1,
-                            new_versionSpecified = true
-                        });
+                            var relation = modify.relation[r];
+                            relation.version = relation.version + 1;
+                            _db.UpdateRelation(relation.ConvertFrom());
+                            osmResults.Add(new relationresult()
+                            {
+                                old_id = relation.id,
+                                old_idSpecified = true,
+                                new_id = relation.id,
+                                new_idSpecified = true,
+                                new_version = (int)relation.version,
+                                new_versionSpecified = true
+                            });
+                        }
                     }
                 }
             }
@@ -536,38 +557,38 @@ namespace OsmSharp.Osm.API
             }
             if (osmChange.delete != null)
             {
-                foreach (var modification in osmChange.delete)
+                foreach (var delete in osmChange.delete)
                 {
-                    if (modification.node != null)
+                    if (delete.node != null)
                     {
-                        for (var i = 0; i < modification.node.Length; i++)
+                        for (var i = 0; i < delete.node.Length; i++)
                         {
-                            var node = _db.GetNode(modification.node[i].id);
-                            if (node.Version != modification.node[i].version)
+                            var node = _db.GetNode(delete.node[i].id);
+                            if (node.Version != delete.node[i].version)
                             {
                                 return new ApiResult<bool>(false);
                             }
                         }
                     }
 
-                    if (modification.way != null)
+                    if (delete.way != null)
                     {
-                        for (var i = 0; i < modification.way.Length; i++)
+                        for (var i = 0; i < delete.way.Length; i++)
                         {
-                            var way = _db.GetWay(modification.way[i].id);
-                            if (way.Version != modification.way[i].version)
+                            var way = _db.GetWay(delete.way[i].id);
+                            if (way.Version != delete.way[i].version)
                             {
                                 return new ApiResult<bool>(false);
                             }
                         }
                     }
 
-                    if (modification.relation != null)
+                    if (delete.relation != null)
                     {
-                        for (var i = 0; i < modification.relation.Length; i++)
+                        for (var i = 0; i < delete.relation.Length; i++)
                         {
-                            var relation = _db.GetRelation(modification.relation[i].id);
-                            if (relation.Version != modification.relation[i].version)
+                            var relation = _db.GetRelation(delete.relation[i].id);
+                            if (relation.Version != delete.relation[i].version)
                             {
                                 return new ApiResult<bool>(false);
                             }

@@ -239,19 +239,25 @@ namespace OsmSharp.Osm.API.Tests
             var db = new MemoryDb();
             var api = new DefaultApiInstance(db);
 
+            var id = db.AddNewNode(new Node()
+            {
+                Latitude = 10,
+                Longitude = 100
+            }).Id.Value;
+
             var changesetResult = api.CreateChangeset(new changeset());
 
             var osmChange = new osmChange()
             {
-                create = new create[]
+                delete = new delete[]
                 {
-                    new create()
+                    new delete()
                     {
                         node = new node[]
                         {
                             new node()
                             {
-                                id = -1,
+                                id = id,
                                 idSpecified = true,
                                 lat = 10,
                                 latSpecified = true,
@@ -263,7 +269,9 @@ namespace OsmSharp.Osm.API.Tests
                                 timestamp = DateTime.Now,
                                 timestampSpecified = true,
                                 visible = true,
-                                visibleSpecified = true
+                                visibleSpecified = true,
+                                version = 1,
+                                versionSpecified = true
                             }
                         }
                     }
@@ -280,9 +288,77 @@ namespace OsmSharp.Osm.API.Tests
             var osmresult = diffResult.osmresult[0];
             Assert.IsInstanceOf<noderesult>(osmresult);
             var noderesult = osmresult as noderesult;
-            Assert.AreEqual(-1, noderesult.old_id);
+            Assert.IsTrue(noderesult.old_idSpecified);
+            Assert.AreEqual(1, noderesult.old_id);
+            Assert.IsFalse(noderesult.new_idSpecified);
+            Assert.IsFalse(noderesult.new_versionSpecified);
+        }
+
+        /// <summary>
+        /// Test applying a changeset and adding a node.
+        /// </summary>
+        [Test]
+        public void TestApplyChangesetUpdateNode()
+        {
+            var db = new MemoryDb();
+            var api = new DefaultApiInstance(db);
+
+            var id = db.AddNewNode(new Node()
+            {
+                Latitude = 10,
+                Longitude = 100,
+                TimeStamp = DateTime.Now.AddYears(-1)
+            }).Id.Value;
+
+            var changesetResult = api.CreateChangeset(new changeset());
+
+            var osmChange = new osmChange()
+            {
+                modify = new modify[]
+                {
+                    new modify()
+                    {
+                        node = new node[]
+                        {
+                            new node()
+                            {
+                                id = 1,
+                                idSpecified = true,
+                                lat = 100,
+                                latSpecified = true,
+                                lon = 1000,
+                                lonSpecified = true,
+                                user = string.Empty,
+                                uid = 125,
+                                uidSpecified = true,
+                                timestamp = DateTime.Now,
+                                timestampSpecified = true,
+                                visible = true,
+                                visibleSpecified = true,
+                                version = 1,
+                                versionSpecified = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = api.ApplyChangeset(osmChange);
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsError);
+            Assert.IsNotNull(result.Data);
+            var diffResult = result.Data;
+            Assert.IsNotNull(diffResult.osmresult);
+            Assert.AreEqual(1, diffResult.osmresult.Length);
+            var osmresult = diffResult.osmresult[0];
+            Assert.IsInstanceOf<noderesult>(osmresult);
+            var noderesult = osmresult as noderesult;
+            Assert.IsTrue(noderesult.old_idSpecified);
+            Assert.AreEqual(1, noderesult.old_id);
+            Assert.IsTrue(noderesult.new_idSpecified);
             Assert.AreEqual(1, noderesult.new_id);
-            Assert.AreEqual(1, noderesult.new_version);
+            Assert.IsTrue(noderesult.new_versionSpecified);
+            Assert.AreEqual(2, noderesult.new_version);
         }
     }
 }
