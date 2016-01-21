@@ -20,25 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Nancy;
-using Nancy.Bootstrapper;
-using Nancy.Diagnostics;
-using OsmSharp.Osm.API.Authentication.Basic;
-using Nancy.TinyIoc;
-using Nancy.Authentication.Stateless;
+using System;
+using System.Collections.Generic;
+using Nancy.Security;
 
-namespace OsmSharp.Osm.API
+namespace OsmSharp.Osm.API.Authentication
 {
-    public class NancyCustomBootstrapper : DefaultNancyBootstrapper
+    /// <summary>
+    /// A user identity.
+    /// </summary>
+    public class UserIdentity : IUserIdentity
     {
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        /// <summary>
+        /// Gets or sets the claims.
+        /// </summary>
+        public IEnumerable<string> Claims
         {
-            get { return new DiagnosticsConfiguration { Password = @"password" }; }
+            get;
+            set;
         }
 
-        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        /// <summary>
+        /// Gets or sets the username.
+        /// </summary>
+        public string UserName
         {
-            StaticConfiguration.EnableRequestTracing = true;
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the user id.
+        /// </summary>
+        public int UserId
+        {
+            get;
+            set;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 
-// Copyright (c) 2015 Ben Abelshausen
+// Copyright (c) 2016 Ben Abelshausen
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using OsmSharp.Osm.Xml.v0_6;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Osm.API.Tests.Mocks
@@ -134,6 +134,11 @@ namespace OsmSharp.Osm.API.Tests.Mocks
         }
 
         public ApiResult<bool> CloseChangeset(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApiResult<long> ValidateUser(string username, string password)
         {
             throw new NotImplementedException();
         }

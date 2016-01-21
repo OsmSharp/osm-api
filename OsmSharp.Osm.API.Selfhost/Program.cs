@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 
-// Copyright (c) 2015 Ben Abelshausen
+// Copyright (c) 2016 Ben Abelshausen
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 
 using Nancy.Hosting.Self;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.API.Authentication;
 using System;
 using System.IO;
 
@@ -31,9 +31,20 @@ namespace OsmSharp.Osm.API.Selfhost
     {
         static void Main(string[] args)
         {
+            // WARNING: generate something different for your own apps!!
+            SaltedHashAlgorithm.GlobalSalt = "K3a@Tb~*ETDczTe]8xpY?7RtbKgz63^5.M#&Db~MwM?!*";
+
             var db = new Db.MemoryDb();
 
-            using (var stream = new FileInfo(@"D:\work\data\OSM\kempen.osm.pbf").OpenRead())
+            // add a new user demo/demo.
+            var user = db.AddNewUser(new Db.Domain.User()
+            {
+                DisplayName = "demo"
+            });
+            db.SetUserPasswordHash(user.Id, SaltedHashAlgorithm.HashPassword(user.DisplayName, "demo"));
+
+            // add some test-data.
+            using (var stream = new FileInfo(@"D:\work\data\OSM\planet\europe\belgium-latest.osm.pbf").OpenRead())
             {
                 var source = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
                 db.LoadFrom(source);
@@ -56,16 +67,6 @@ namespace OsmSharp.Osm.API.Selfhost
             //        TimeStamp = DateTime.Now                    
             //    }
             //});
-
-            db.AddNewUser(new Db.Domain.User()
-                {
-                    AccountCreated = DateTime.Now,
-                    DisplayName = "Ben Abelshausen",
-                    ChangeSetCount = 0,
-                    ContributorTermsAgreed = true,
-                    ContributorTermsPublicDomain = false,
-                    TraceCount = 0
-                });
 
             ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
 

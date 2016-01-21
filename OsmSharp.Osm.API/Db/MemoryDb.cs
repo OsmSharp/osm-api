@@ -37,6 +37,7 @@ namespace OsmSharp.Osm.API.Db
         private readonly List<Way> _ways;
         private readonly List<Relation> _relations;
         private readonly List<User> _users;
+        private readonly Dictionary<int, string> _userHashes;
 
         /// <summary>
         /// Creates a new memory db.
@@ -47,6 +48,7 @@ namespace OsmSharp.Osm.API.Db
             _ways = new List<Way>();
             _relations = new List<Relation>();
             _users = new List<User>();
+            _userHashes = new Dictionary<int, string>();
         }
 
         /// <summary>
@@ -381,6 +383,46 @@ namespace OsmSharp.Osm.API.Db
         public User GetUser(long id)
         {
             return _users.FirstOrDefault(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// Gets the user with the given username.
+        /// </summary>
+        public User GetUserByName(string username)
+        {
+            return _users.FirstOrDefault(x => x.DisplayName == username);
+        }
+
+        /// <summary>
+        /// Gets the password hash for the user with the given id.
+        /// </summary>
+        public string GetUserPasswordHash(long id)
+        {
+            if (!_users.Any(x => x.Id == id))
+            { // user not found.
+                return null;
+            }
+
+            var hash = string.Empty;
+            if(!_userHashes.TryGetValue((int)id, out hash))
+            { // no hash found.
+                return null;
+            }
+            return hash;
+        }
+
+        /// <summary>
+        /// Sets the password hash for the user with the given id.
+        /// </summary>
+        public bool SetUserPasswordHash(long id, string hash)
+        {
+            if(!_users.Any(x => x.Id == id))
+            { // user not found.
+                return false;
+            }
+
+            _userHashes[(int)id] = hash;
+            return true;
         }
     }
 }

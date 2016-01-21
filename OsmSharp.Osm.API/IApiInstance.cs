@@ -81,5 +81,10 @@ namespace OsmSharp.Osm.API
         /// Validates a changeset against the current state of the data.
         /// </summary>
         ApiResult<bool> ValidateChangeset(osmChange osmChange);
+
+        /// <summary>
+        /// Validates a user and returns it's user id. When user is not found, returns -1.
+        /// </summary>
+        ApiResult<long> ValidateUser(string username, string password);
     }
 }

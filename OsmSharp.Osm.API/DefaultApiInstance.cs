@@ -608,5 +608,25 @@ namespace OsmSharp.Osm.API
         {
             return new ApiResult<bool>(true);
         }
+
+        /// <summary>
+        /// Validates a user and returns it's user id.
+        /// </summary>
+        public ApiResult<long> ValidateUser(string username, string password)
+        {
+            var user = _db.GetUserByName(username);
+            if(user == null)
+            { // username not found.
+                return new ApiResult<long>(ApiResultStatusCode.NotFound, "User with given username not found.");
+            }
+            var hash = Authentication.SaltedHashAlgorithm.HashPassword(username, password);
+            var dbHash = _db.GetUserPasswordHash(user.Id);
+            if(!hash.Equals(dbHash))
+            {// password not correct.
+                return new ApiResult<long>(ApiResultStatusCode.NotFound, "Password not correct.");
+            }
+
+            return new ApiResult<long>(user.Id);
+        }
     }
 }

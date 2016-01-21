@@ -100,5 +100,20 @@ namespace OsmSharp.Osm.API.Db
         /// Gets the user with the given id.
         /// </summary>
         User GetUser(long id);
+
+        /// <summary>
+        /// Gets the user with the given username.
+        /// </summary>
+        User GetUserByName(string username);
+
+        /// <summary>
+        /// Gets the user password hash.
+        /// </summary>
+        string GetUserPasswordHash(long id);
+
+        /// <summary>
+        /// Sets the user password hash.
+        /// </summary>
+        bool SetUserPasswordHash(long id, string hash);
     }
 }

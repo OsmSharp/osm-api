@@ -22,7 +22,9 @@
 
 using Nancy;
 using Nancy.ModelBinding;
+using Nancy.Security;
 using OsmSharp.Osm.API.Authentication;
+using OsmSharp.Osm.API.Authentication.Basic;
 using OsmSharp.Osm.Xml.v0_6;
 using System;
 using System.Collections.Generic;
@@ -41,6 +43,37 @@ namespace OsmSharp.Osm.API
         /// </summary>
         public ApiModule()
         {
+            this.EnableBasicAuthentication(
+                new BasicAuthenticationConfiguration(
+                    (username, password, context) =>
+                    {
+                        var instance = context.Request.Path.Substring(1, context.Request.Path.IndexOf('/', 1) - 1);
+
+                        IApiInstance api;
+                        if (!ApiBootstrapper.TryGetInstance(instance, out api))
+                        { // api instance not found.
+                            return null;
+                        }
+
+                        var result = api.ValidateUser(username, password);
+                        if (result.IsError)
+                        { // user not validated correctly.
+                            return null;
+                        }
+                        if (result.Data > 0)
+                        { // user validated an userid returned.
+                            return new UserIdentity()
+                            {
+                                UserId = (int)result.Data,
+                                UserName = username,
+                                Claims = new List<string>()
+                            };
+                        }
+
+                        // Not recognised => anonymous.
+                        return null;
+                    }, "OSM-API"));
+
             Get["{instance}/api/capabilities"] = _ => { return this.GetCapabilities(_); };
             Get["{instance}/api/0.6/capabilities"] = _ => { return this.GetCapabilities(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
@@ -79,6 +112,7 @@ namespace OsmSharp.Osm.API
             Get["{instance}/api/0.6/node/{id}/ways"] = _ => { return this.GetWaysForNode(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
             Get["{instance}/api/0.6/user/{id}"] = _ => { return this.GetUserDetails(_); };
+            Get["{instance}/api/0.6/user/details"] = _ => { return this.GetCurrentUserDetails(_); };
         }
 
         /// <summary>
@@ -202,6 +236,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -277,6 +312,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -303,6 +339,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -360,6 +397,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -422,6 +460,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -524,6 +563,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -550,6 +590,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -765,6 +806,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -791,6 +833,7 @@ namespace OsmSharp.Osm.API
             try
             {
                 this.EnableCors();
+                this.RequiresAuthentication();
 
                 // get instance and check if active.
                 IApiInstance instance;
