@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using OsmSharp.Osm.Xml.v0_6;
+using OsmSharp.Changesets;
 using System;
 using System.Collections.Generic;
 
@@ -34,7 +34,7 @@ namespace OsmSharp.API.Tests.Mocks
         private List<Node> _nodes;
         private List<Way> _ways;
         private List<Relation> _relations;
-        private List<changeset> _changesets;
+        private List<Changeset> _changesets;
 
         public MockApiInstance(IEnumerable<Node> nodes, IEnumerable<Way> ways, IEnumerable<Relation> relations)
         {
@@ -42,93 +42,93 @@ namespace OsmSharp.API.Tests.Mocks
             if (ways != null) { _ways = new List<Way>(ways); }
             if (relations != null) { _relations = new List<Relation>(relations); }
 
-            _changesets = new List<changeset>();
+            _changesets = new List<Changeset>();
         }
 
-        public ApiResult<diffResult> ApplyChangeset(long id, osmChange osmChange)
+        public ApiResult<DiffResult> ApplyChangeset(long id, OsmChange osmChange)
         {
             throw new NotImplementedException();
         }
 
-        public ApiResult<long> CreateChangeset(changeset changeset)
+        public ApiResult<long> CreateChangeset(Changeset changeset)
         {
             _changesets.Add(changeset);
             return new ApiResult<long>(_changesets.Count);
         }
 
-        public ApiResult<osm> GetCapabilities()
+        public ApiResult<Osm> GetCapabilities()
         {
-            return new ApiResult<osm>(new osm()
+            return new ApiResult<Osm>(new Osm()
             {
-                api = this.Capabilities
+                Api = this.Capabilities
             });
         }
 
-        public api Capabilities
+        public Capabilities Capabilities
         {
             get;
             set;
         }
 
-        public ApiResult<osm> GetMap(double left, double bottom, double right, double top)
+        public ApiResult<Osm> GetMap(float left, float bottom, float right, float top)
         {
             throw new NotImplementedException();
         }
 
-        public ApiResult<osm> GetNode(long id)
+        public ApiResult<Osm> GetNode(long id)
         {
             var node = _nodes.Find(x => x.Id == id);
             if(node == null)
             {
-                return new ApiResult<osm>(ApiResultStatusCode.NotFound, "Not found.");
+                return new ApiResult<Osm>(ApiResultStatusCode.NotFound, "Not found.");
             }
-            return new ApiResult<osm>(new osm()
+            return new ApiResult<Osm>(new Osm()
             {
-                node = new Xml.v0_6.node[]
+                Nodes = new Node[]
                 {
-                    node.ConvertTo()
+                    node
                 }
             });
         }
 
-        public ApiResult<osm> GetRelation(long id)
+        public ApiResult<Osm> GetRelation(long id)
         {
             var relation = _relations.Find(x => x.Id == id);
             if (relation == null)
             {
-                return new ApiResult<osm>(ApiResultStatusCode.NotFound, "Not found.");
+                return new ApiResult<Osm>(ApiResultStatusCode.NotFound, "Not found.");
             }
-            return new ApiResult<osm>(new osm()
+            return new ApiResult<Osm>(new Osm()
             {
-                relation = new Xml.v0_6.relation[]
+                Relations = new Relation[]
                 {
-                    relation.ConvertTo()
+                    relation
                 }
             });
         }
 
-        public ApiResult<osm> GetUser(long id)
+        public ApiResult<Osm> GetUser(long id)
         {
             throw new NotImplementedException();
         }
 
-        public ApiResult<osm> GetWay(long id)
+        public ApiResult<Osm> GetWay(long id)
         {
             var way = _ways.Find(x => x.Id == id);
             if (way == null)
             {
-                return new ApiResult<osm>(ApiResultStatusCode.NotFound, "Not found.");
+                return new ApiResult<Osm>(ApiResultStatusCode.NotFound, "Not found.");
             }
-            return new ApiResult<osm>(new osm()
+            return new ApiResult<Osm>(new Osm()
             {
-                way = new Xml.v0_6.way[]
+                Ways = new Way[]
                 {
-                    way.ConvertTo()
+                    way
                 }
             });
         }
 
-        public ApiResult<bool> ValidateChangeset(osmChange osmChange)
+        public ApiResult<bool> ValidateChangeset(OsmChange osmChange)
         {
             throw new NotImplementedException();
         }

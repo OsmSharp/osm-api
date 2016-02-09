@@ -23,6 +23,7 @@
 using Nancy.Hosting.Self;
 using OsmSharp.API.Authentication;
 using OsmSharp.API.Db.Default;
+using OsmSharp.Db;
 using System;
 using System.IO;
 
@@ -37,46 +38,22 @@ namespace OsmSharp.API.Selfhost
 
             // Build dummy user db.
             var userDb = new MemoryUserDb();
-            userDb.AddUser(new User()
+            var user = new User()
             {
                 Id = 1,
                 DisplayName = "demo"
-            }, SaltedHashAlgorithm.HashPassword(user.DisplayName, "demo"));
+            };
+            userDb.AddUser(user, SaltedHashAlgorithm.HashPassword(user.DisplayName, "demo"));
 
             var db = new OsmSharp.API.Db.Default.Db(
                 new MemoryHistoryDb(), userDb);
 
-            // add a new user demo/demo.
-            var user = db.AddNewUser(new Db.User()
-            {
-                DisplayName = "demo"
-            });
-            db.SetUserPasswordHash(user.Id, SaltedHashAlgorithm.HashPassword(user.DisplayName, "demo"));
-
             // add some test-data.
             using (var stream = new FileInfo(@"D:\work\data\OSM\planet\europe\belgium-latest.osm.pbf").OpenRead())
             {
-                var source = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
-                db.LoadFrom(source);
+                var source = new OsmSharp.Streams.PBFOsmStreamSource(stream);
+                db.Add(source);
             }
-
-            //db.LoadFrom(new OsmGeo[]
-            //{
-            //    new Node()
-            //    {
-            //        Id = 1,
-            //        Latitude = 51.266211413970844,
-            //        Longitude  =4.791626930236816,
-            //        ChangeSetId = 1,
-            //        Tags = new TagsCollection(
-            //            Tag.Create("amenity", "village")),
-            //        UserId = 1,
-            //        UserName = "Ben",
-            //        Version = 1,
-            //        Visible= true,
-            //        TimeStamp = DateTime.Now                    
-            //    }
-            //});
 
             ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
 

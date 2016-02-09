@@ -87,6 +87,7 @@
     <Compile Include="Authentication\UserIdentity.cs" />
     <Compile Include="Db\Default\Db.cs" />
     <Compile Include="Db\Default\MemoryUserDb.cs" />
+    <Compile Include="Db\IDbExtensions.cs" />
     <Compile Include="Db\IUserDb.cs" />
     <Compile Include="DefaultApiInstance.cs" />
     <Compile Include="Extensions.cs" />

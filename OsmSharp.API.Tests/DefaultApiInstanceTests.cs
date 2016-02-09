@@ -21,6 +21,10 @@
 // THE SOFTWARE.
 
 using NUnit.Framework;
+using OsmSharp.API.Db.Default;
+using OsmSharp.Changesets;
+using OsmSharp.Db;
+using OsmSharp.Tags;
 using System;
 
 namespace OsmSharp.API.Tests
@@ -37,7 +41,9 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestGetNode()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
             var result = api.GetNode(1);
@@ -45,9 +51,14 @@ namespace OsmSharp.API.Tests
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ApiResultStatusCode.NotFound, result.Status);
 
-            db.LoadFrom(new OsmGeo[]
+            db.Add(new OsmGeo[]
             {
-                Node.Create(1, 10, 100)
+                new Node()
+                {
+                    Id = 1,
+                    Latitude = 10,
+                    Longitude = 100
+                }
             });
 
             result = api.GetNode(1);
@@ -55,13 +66,13 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             var osm = result.Data;
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.node);
-            Assert.AreEqual(1, osm.node.Length);
-            Assert.AreEqual(0.6, osm.version);
-            var node = osm.node[0];
-            Assert.AreEqual(1, node.id);
-            Assert.AreEqual(10, node.lat);
-            Assert.AreEqual(100, node.lon);
+            Assert.IsNotNull(osm.Nodes);
+            Assert.AreEqual(1, osm.Nodes.Length);
+            Assert.AreEqual(0.6, osm.Version);
+            var node = osm.Nodes[0];
+            Assert.AreEqual(1, node.Id);
+            Assert.AreEqual(10, node.Latitude);
+            Assert.AreEqual(100, node.Longitude);
         }
 
         /// <summary>
@@ -70,7 +81,9 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestGetWay()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
             var result = api.GetWay(1);
@@ -78,9 +91,13 @@ namespace OsmSharp.API.Tests
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ApiResultStatusCode.NotFound, result.Status);
 
-            db.LoadFrom(new OsmGeo[]
+            db.Add(new OsmGeo[]
             {
-                Way.Create(1, 1, 2, 3)
+                new Way()
+                {
+                    Id = 1,
+                    Nodes = new long[] { 1, 2, 3 }
+                }
             });
 
             result = api.GetWay(1);
@@ -88,16 +105,16 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             var osm = result.Data;
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.way);
-            Assert.AreEqual(1, osm.way.Length);
-            Assert.AreEqual(0.6, osm.version);
-            var way = osm.way[0];
-            Assert.AreEqual(1, way.id);
-            Assert.IsNotNull(way.nd);
-            Assert.AreEqual(3, way.nd.Length);
-            Assert.AreEqual(1, way.nd[0].@ref);
-            Assert.AreEqual(2, way.nd[1].@ref);
-            Assert.AreEqual(3, way.nd[2].@ref);
+            Assert.IsNotNull(osm.Ways);
+            Assert.AreEqual(1, osm.Ways.Length);
+            Assert.AreEqual(0.6, osm.Version);
+            var way = osm.Ways[0];
+            Assert.AreEqual(1, way.Id);
+            Assert.IsNotNull(way.Nodes);
+            Assert.AreEqual(3, way.Nodes.Length);
+            Assert.AreEqual(1, way.Nodes[0]);
+            Assert.AreEqual(2, way.Nodes[1]);
+            Assert.AreEqual(3, way.Nodes[2]);
         }
 
         /// <summary>
@@ -106,7 +123,9 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestGetRelation()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
             var result = api.GetRelation(1);
@@ -114,12 +133,33 @@ namespace OsmSharp.API.Tests
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ApiResultStatusCode.NotFound, result.Status);
 
-            db.LoadFrom(new OsmGeo[]
+            db.Add(new OsmGeo[]
             {
-                Relation.Create(1,
-                    RelationMember.Create(1, "test", OsmGeoType.Node),
-                    RelationMember.Create(2, "another_test", OsmGeoType.Way),
-                    RelationMember.Create(3, "yet_another_test", OsmGeoType.Relation))
+                new Relation()
+                {
+                    Id = 1,
+                    Members = new RelationMember[]
+                    {
+                        new RelationMember()
+                        {
+                            Id = 1,
+                            Role = "test",
+                            Type = OsmGeoType.Node
+                        },
+                        new RelationMember()
+                        {
+                            Id = 2,
+                            Role = "another_test",
+                            Type = OsmGeoType.Way
+                        },
+                        new RelationMember()
+                        {
+                            Id = 3,
+                            Role = "yet_another_test",
+                            Type = OsmGeoType.Relation
+                        }
+                    }
+                }
             });
 
             result = api.GetRelation(1);
@@ -127,23 +167,23 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             var osm = result.Data;
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.relation);
-            Assert.AreEqual(1, osm.relation.Length);
-            Assert.AreEqual(0.6, osm.version);
-            var relation = osm.relation[0];
+            Assert.IsNotNull(osm.Relations);
+            Assert.AreEqual(1, osm.Relations.Length);
+            Assert.AreEqual(0.6, osm.Version);
+            var relation = osm.Relations[0];
             Assert.IsNotNull(relation);
-            Assert.AreEqual(1, relation.id);
-            Assert.IsNotNull(relation.member);
-            Assert.AreEqual(3, relation.member.Length);
-            Assert.AreEqual(1, relation.member[0].@ref);
-            Assert.AreEqual("test", relation.member[0].role);
-            Assert.AreEqual(memberType.node, relation.member[0].type);
-            Assert.AreEqual(2, relation.member[1].@ref);
-            Assert.AreEqual("another_test", relation.member[1].role);
-            Assert.AreEqual(memberType.way, relation.member[1].type);
-            Assert.AreEqual(3, relation.member[2].@ref);
-            Assert.AreEqual("yet_another_test", relation.member[2].role);
-            Assert.AreEqual(memberType.relation, relation.member[2].type);
+            Assert.AreEqual(1, relation.Id);
+            Assert.IsNotNull(relation.Members);
+            Assert.AreEqual(3, relation.Members.Length);
+            Assert.AreEqual(1, relation.Members[0].Id);
+            Assert.AreEqual("test", relation.Members[0].Role);
+            Assert.AreEqual(OsmGeoType.Node, relation.Members[0].Type);
+            Assert.AreEqual(2, relation.Members[1].Type);
+            Assert.AreEqual("another_test", relation.Members[1].Role);
+            Assert.AreEqual(OsmGeoType.Way, relation.Members[1].Type);
+            Assert.AreEqual(3, relation.Members[2].Type);
+            Assert.AreEqual("yet_another_test", relation.Members[2].Role);
+            Assert.AreEqual(OsmGeoType.Relation, relation.Members[2].Type);
         }
 
         /// <summary>
@@ -152,20 +192,16 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestOpenChangeset()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var result = api.CreateChangeset(new changeset()
+            var result = api.CreateChangeset(new Changeset()
             {
-                id = -1,
-                tag = new tag[]
-                {
-                    new tag()
-                    {
-                        k = "test_tag",
-                        v = "test_value"
-                    }
-                }
+                Id = -1,
+                Tags = new TagsCollection(
+                    new Tag("test_tag", "test_value"))
             });
 
             Assert.IsNotNull(result);
@@ -179,36 +215,26 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetAddNode()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                create = new create[]
+                Create = new OsmGeo[]
                 {
-                    new create()
+                    new Node()
                     {
-                        node = new node[]
-                        {
-                            new node()
-                            {
-                                id = -1,
-                                idSpecified = true,
-                                lat = 10,
-                                latSpecified = true,
-                                lon = 100,
-                                lonSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                visible = true,
-                                visibleSpecified = true
-                            }
-                        }
+                        Id = -1,
+                        Latitude = 10,
+                        Longitude = 100,
+                        UserName = string.Empty,
+                        UserId = 124,
+                        TimeStamp = DateTime.Now,
+                        Visible = true
                     }
                 }
             };
@@ -218,17 +244,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<noderesult>(osmresult);
-            var noderesult = osmresult as noderesult;
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.AreEqual(-1, noderesult.old_id);
-            Assert.IsTrue(noderesult.new_idSpecified);
-            Assert.AreEqual(1, noderesult.new_id);
-            Assert.IsTrue(noderesult.new_versionSpecified);
-            Assert.AreEqual(1, noderesult.new_version);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<NodeResult>(osmresult);
+            var noderesult = osmresult as NodeResult;
+            Assert.AreEqual(-1, noderesult.OldId);
+            Assert.AreEqual(1, noderesult.NewId);
+            Assert.AreEqual(1, noderesult.NewVersion);
         }
 
         /// <summary>
@@ -237,44 +260,33 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetDeleteNode()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var id = db.AddNewNode(new Node()
-            {
-                Latitude = 10,
-                Longitude = 100
-            }).Id.Value;
-
-            var changesetResult = api.CreateChangeset(new changeset());
-
-            var osmChange = new osmChange()
-            {
-                delete = new delete[]
+            db.Add(new Node()
                 {
-                    new delete()
+                    Id = 1,
+                    Latitude = 10,
+                    Longitude = 100
+                });
+
+            var changesetResult = api.CreateChangeset(new Changeset());
+            var osmChange = new OsmChange()
+            {
+                Delete = new OsmGeo[]
+                {
+                    new Node()
                     {
-                        node = new node[]
-                        {
-                            new node()
-                            {
-                                id = id,
-                                idSpecified = true,
-                                lat = 10,
-                                latSpecified = true,
-                                lon = 100,
-                                lonSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                visible = true,
-                                visibleSpecified = true,
-                                version = 1,
-                                versionSpecified = true
-                            }
-                        }
+                        Id = 1,
+                        Latitude = 10,
+                        Longitude = 100,
+                        UserName = string.Empty,
+                        UserId = 124,
+                        TimeStamp = DateTime.Now,
+                        Visible = true,
+                        Version = 1
                     }
                 }
             };
@@ -284,15 +296,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<noderesult>(osmresult);
-            var noderesult = osmresult as noderesult;
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.AreEqual(1, noderesult.old_id);
-            Assert.IsFalse(noderesult.new_idSpecified);
-            Assert.IsFalse(noderesult.new_versionSpecified);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<NodeResult>(osmresult);
+            var noderesult = osmresult as NodeResult;
+            Assert.AreEqual(1, noderesult.OldId);
+            Assert.IsNull(noderesult.NewId);
+            Assert.IsNull(noderesult.NewVersion);
         }
 
         /// <summary>
@@ -301,45 +312,35 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetUpdateNode()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var id = db.AddNewNode(new Node()
+            db.Add(new Node()
             {
+                Id = 1,
                 Latitude = 10,
                 Longitude = 100,
                 TimeStamp = DateTime.Now.AddYears(-1)
-            }).Id.Value;
+            });
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                modify = new modify[]
+                Modify = new OsmGeo[]
                 {
-                    new modify()
+                    new Node()
                     {
-                        node = new node[]
-                        {
-                            new node()
-                            {
-                                id = 1,
-                                idSpecified = true,
-                                lat = 100,
-                                latSpecified = true,
-                                lon = 1000,
-                                lonSpecified = true,
-                                user = string.Empty,
-                                uid = 125,
-                                uidSpecified = true,
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                visible = true,
-                                visibleSpecified = true,
-                                version = 1,
-                                versionSpecified = true
-                            }
-                        }
+                        Id = 1,
+                        Latitude = 100,
+                        Longitude = 1000,
+                        UserName = string.Empty,
+                        UserId = 125,
+                        TimeStamp = DateTime.Now,
+                        Visible = true,
+                        Version = 1
                     }
                 }
             };
@@ -349,17 +350,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<noderesult>(osmresult);
-            var noderesult = osmresult as noderesult;
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.AreEqual(1, noderesult.old_id);
-            Assert.IsTrue(noderesult.new_idSpecified);
-            Assert.AreEqual(1, noderesult.new_id);
-            Assert.IsTrue(noderesult.new_versionSpecified);
-            Assert.AreEqual(2, noderesult.new_version);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<NodeResult>(osmresult);
+            var noderesult = osmresult as NodeResult;
+            Assert.AreEqual(1, noderesult.OldId);
+            Assert.AreEqual(1, noderesult.NewId);
+            Assert.AreEqual(2, noderesult.NewVersion);
         }
 
         /// <summary>
@@ -368,45 +366,25 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetAddWay()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                create = new create[]
+                Create = new OsmGeo[]
                 {
-                    new create()
+                    new Way()
                     {
-                        way = new way[]
-                        {
-                            new way()
-                            {
-                                id = -1,
-                                idSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                nd = new nd[]
-                                {
-                                    new nd()
-                                    {
-                                        @ref = 1,
-                                        refSpecified = true
-                                    },
-                                    new nd()
-                                    {
-                                        @ref = 2,
-                                        refSpecified = true
-                                    }
-                                },
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                visible = true,
-                                visibleSpecified = true
-                            }
-                        }
+                        Id = -1,
+                        UserName = string.Empty,
+                        UserId = 124,
+                        Nodes = new long[] { 1, 2 },
+                        TimeStamp = DateTime.Now,
+                        Visible = true
                     }
                 }
             };
@@ -416,14 +394,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<wayresult>(osmresult);
-            var noderesult = osmresult as wayresult;
-            Assert.AreEqual(-1, noderesult.old_id);
-            Assert.AreEqual(1, noderesult.new_id);
-            Assert.AreEqual(1, noderesult.new_version);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<WayResult>(osmresult);
+            var noderesult = osmresult as WayResult;
+            Assert.AreEqual(-1, noderesult.OldId);
+            Assert.AreEqual(1, noderesult.NewId);
+            Assert.AreEqual(1, noderesult.NewVersion);
         }
 
         /// <summary>
@@ -432,55 +410,33 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetDeleteWay()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var id = db.AddNewWay(new Way()
+            db.Add(new Way()
             {
                 Id = -1,
-                Nodes = new System.Collections.Generic.List<long>(
-                    new long[] { 1, 3 }),
+                Nodes =new long[] { 1, 3 },
                 TimeStamp = DateTime.Now.AddYears(-1)
-            }).Id.Value;
+            });
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                delete = new delete[]
+                Delete = new OsmGeo[]
                 {
-                    new delete()
+                    new Way()
                     {
-                        way = new way[]
-                        {
-                            new way()
-                            {
-                                id = 1,
-                                idSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                nd = new nd[]
-                                {
-                                    new nd()
-                                    {
-                                        @ref = 1,
-                                        refSpecified = true
-                                    },
-                                    new nd()
-                                    {
-                                        @ref = 3,
-                                        refSpecified = true
-                                    }
-                                },
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                visible = true,
-                                visibleSpecified = true,
-                                version = 1,
-                                versionSpecified = true
-                            }
-                        }
+                        Id = 1,
+                        UserName = string.Empty,
+                        UserId = 124,
+                        Nodes = new long[] {1, 3 },
+                        TimeStamp = DateTime.Now,
+                        Visible = true,
+                        Version = 1,
                     }
                 }
             };
@@ -490,15 +446,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<wayresult>(osmresult);
-            var noderesult = osmresult as wayresult;
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.AreEqual(1, noderesult.old_id);
-            Assert.IsFalse(noderesult.new_idSpecified);
-            Assert.IsFalse(noderesult.new_versionSpecified);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<WayResult>(osmresult);
+            var noderesult = osmresult as WayResult;
+            Assert.AreEqual(1, noderesult.OldId);
+            Assert.IsNull(noderesult.NewId);
+            Assert.IsNull(noderesult.NewVersion);
         }
 
         /// <summary>
@@ -507,55 +462,33 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetUpdateWay()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var id = db.AddNewWay(new Way()
+            db.Add(new Way()
             {
                 Id = -1,
-                Nodes = new System.Collections.Generic.List<long>(
-                    new long[] { 1, 3 }),
+                Nodes = new long[] { 1, 3 },
                 TimeStamp = DateTime.Now.AddYears(-1)
-            }).Id.Value;
+            });
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                modify = new modify[]
+                Modify = new OsmGeo[]
                 {
-                    new modify()
+                    new Way()
                     {
-                        way = new way[]
-                        {
-                            new way()
-                            {
-                                id = 1,
-                                idSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                nd = new nd[]
-                                {
-                                    new nd()
-                                    {
-                                        @ref = 1,
-                                        refSpecified = true
-                                    },
-                                    new nd()
-                                    {
-                                        @ref = 2,
-                                        refSpecified = true
-                                    }
-                                },
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                visible = true,
-                                visibleSpecified = true,
-                                version = 1,
-                                versionSpecified = true
-                            }
-                        }
+                        Id = 1,
+                        UserName = string.Empty,
+                        UserId = 124,
+                        Nodes = new long[] { 1, 2 },
+                        TimeStamp = DateTime.Now,
+                        Visible = true,
+                        Version = 1,
                     }
                 }
             };
@@ -565,17 +498,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<wayresult>(osmresult);
-            var noderesult = osmresult as wayresult;
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.AreEqual(1, noderesult.old_id);
-            Assert.IsTrue(noderesult.new_idSpecified);
-            Assert.AreEqual(1, noderesult.new_id);
-            Assert.IsTrue(noderesult.new_versionSpecified);
-            Assert.AreEqual(2, noderesult.new_version);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<WayResult>(osmresult);
+            var noderesult = osmresult as WayResult;
+            Assert.AreEqual(1, noderesult.OldId);
+            Assert.AreEqual(1, noderesult.NewId);
+            Assert.AreEqual(2, noderesult.NewVersion);
         }
 
         /// <summary>
@@ -584,51 +514,39 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetAddRelation()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                create = new create[]
+                Create = new OsmGeo[]
                 {
-                    new create()
+                    new Relation()
                     {
-                        relation = new relation[]
+                        Id = -1,
+                        UserName = string.Empty,
+                        UserId = 124,
+                        Members = new RelationMember[]
                         {
-                            new relation()
+                            new RelationMember()
                             {
-                                id = -1,
-                                idSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                member = new member[]
-                                {
-                                    new member()
-                                    {
-                                        @ref = 1,
-                                        refSpecified = true,
-                                        role = "test_role",
-                                        type = memberType.node,
-                                        typeSpecified = true
-                                    },
-                                    new member()
-                                    {
-                                        @ref = 2,
-                                        refSpecified = true,
-                                        role = "another_test_role",
-                                        type = memberType.way,
-                                        typeSpecified = true
-                                    }
-                                },
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                visible = true,
-                                visibleSpecified = true
+                                Id = 1,
+                                Role = "test_role",
+                                Type = OsmGeoType.Node,
+                            },
+                            new RelationMember()
+                            {
+                                Id = 2,
+                                Role = "another_test_role",
+                                Type = OsmGeoType.Way,
                             }
-                        }
+                        },
+                        TimeStamp = DateTime.Now,
+                        Visible = true
                     }
                 }
             };
@@ -638,17 +556,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<relationresult>(osmresult);
-            var noderesult = osmresult as relationresult;
-            Assert.AreEqual(-1, noderesult.old_id);
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.AreEqual(1, noderesult.new_id);
-            Assert.IsTrue(noderesult.new_idSpecified);
-            Assert.AreEqual(1, noderesult.new_version);
-            Assert.IsTrue(noderesult.new_versionSpecified);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<RelationResult>(osmresult);
+            var noderesult = osmresult as RelationResult;
+            Assert.AreEqual(-1, noderesult.OldId);
+            Assert.AreEqual(1, noderesult.NewId);
+            Assert.AreEqual(1, noderesult.NewVersion);
         }
 
         /// <summary>
@@ -657,75 +572,57 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetDeleteRelation()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            db.AddNewRelation(new Relation()
+            db.Add(new Relation()
             {
-                Id = -1,
-                Members = new System.Collections.Generic.List<RelationMember>(
-                    new RelationMember[]
+                Id = 1,
+                Members = new RelationMember[]
                     {
                         new RelationMember()
                         {
-                            MemberId = 1,
-                            MemberRole = "test_role",
-                            MemberType = OsmGeoType.Node
+                            Id = 1,
+                            Role = "test_role",
+                            Type = OsmGeoType.Node
                         },
                         new RelationMember()
                         {
-                            MemberId = 2,
-                            MemberRole = "another_test_role",
-                            MemberType = OsmGeoType.Way
+                            Id = 2,
+                            Role = "another_test_role",
+                            Type = OsmGeoType.Way
                         }
-                    }),
+                    },
                 TimeStamp = DateTime.Now.AddYears(-1)
             });
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                delete = new delete[]
+                Delete = new OsmGeo[]
                 {
-                    new delete()
+                    new Relation()
                     {
-                        relation = new relation[]
-                        {
-                            new relation()
+                        Id = -1,
+                        Members = new RelationMember[]
                             {
-                                id = 1,
-                                idSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                member = new member[]
+                                new RelationMember()
                                 {
-                                    new member()
-                                    {
-                                        @ref = 1,
-                                        refSpecified = true,
-                                        role = "test_role",
-                                        type = memberType.node,
-                                        typeSpecified = true
-                                    },
-                                    new member()
-                                    {
-                                        @ref = 2,
-                                        refSpecified = true,
-                                        role = "another_test_role",
-                                        type = memberType.way,
-                                        typeSpecified = true
-                                    }
+                                    Id = 1,
+                                    Role = "test_role",
+                                    Type = OsmGeoType.Node
                                 },
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                version = 1,
-                                versionSpecified = true,
-                                visible = true,
-                                visibleSpecified = true
-                            }
-                        }
+                                new RelationMember()
+                                {
+                                    Id = 2,
+                                    Role = "another_test_role",
+                                    Type = OsmGeoType.Way
+                                }
+                            },
+                        TimeStamp = DateTime.Now.AddYears(-1)
                     }
                 }
             };
@@ -735,15 +632,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<relationresult>(osmresult);
-            var noderesult = osmresult as relationresult;
-            Assert.AreEqual(1, noderesult.old_id);
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.IsFalse(noderesult.new_idSpecified);
-            Assert.IsFalse(noderesult.new_versionSpecified);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<RelationResult>(osmresult);
+            var noderesult = osmresult as RelationResult;
+            Assert.AreEqual(1, noderesult.OldId);
+            Assert.IsNull(noderesult.NewId);
+            Assert.IsNull(noderesult.NewVersion);
         }
 
         /// <summary>
@@ -752,75 +648,61 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestApplyChangesetUpdateRelation()
         {
-            var db = new MemoryDb();
+            var db = new OsmSharp.API.Db.Default.Db(
+                new MemoryHistoryDb(),
+                new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
-            db.AddNewRelation(new Relation()
+            db.Add(new Relation()
             {
-                Id = -1,
-                Members = new System.Collections.Generic.List<RelationMember>(
-                    new RelationMember[]
+                Id = 1,
+                Members = new RelationMember[]
                     {
                         new RelationMember()
                         {
-                            MemberId = 10,
-                            MemberRole = "test_role",
-                            MemberType = OsmGeoType.Node
+                            Id = 10,
+                            Role = "test_role",
+                            Type = OsmGeoType.Node
                         },
                         new RelationMember()
                         {
-                            MemberId = 20,
-                            MemberRole = "another_test_role",
-                            MemberType = OsmGeoType.Way
+                            Id = 20,
+                            Role = "another_test_role",
+                            Type = OsmGeoType.Way
                         }
-                    }),
+                    },
                 TimeStamp = DateTime.Now.AddYears(-1)
             });
 
-            var changesetResult = api.CreateChangeset(new changeset());
+            var changesetResult = api.CreateChangeset(new Changeset());
 
-            var osmChange = new osmChange()
+            var osmChange = new OsmChange()
             {
-                modify = new modify[]
+                Modify = new OsmGeo[]
                 {
-                    new modify()
+                    new Relation()
                     {
-                        relation = new relation[]
+                        Id = 1,
+                        UserName = string.Empty,
+                        UserId = 124,
+                        Members = new RelationMember[]
                         {
-                            new relation()
+                            new RelationMember()
                             {
-                                id = 1,
-                                idSpecified = true,
-                                user = string.Empty,
-                                uid = 124,
-                                uidSpecified = true,
-                                member = new member[]
-                                {
-                                    new member()
-                                    {
-                                        @ref = 1,
-                                        refSpecified = true,
-                                        role = "test_role",
-                                        type = memberType.node,
-                                        typeSpecified = true
-                                    },
-                                    new member()
-                                    {
-                                        @ref = 2,
-                                        refSpecified = true,
-                                        role = "another_test_role",
-                                        type = memberType.way,
-                                        typeSpecified = true
-                                    }
-                                },
-                                timestamp = DateTime.Now,
-                                timestampSpecified = true,
-                                version = 1,
-                                versionSpecified = true,
-                                visible = true,
-                                visibleSpecified = true
+                                Id = 1,
+                                Role = "test_role",
+                                Type = OsmGeoType.Node
+                            },
+                            new RelationMember()
+                            {
+                                Id = 2,
+                                Role = "another_test_role",
+                                Type = OsmGeoType.Way
                             }
-                        }
+                        },
+                        TimeStamp = DateTime.Now,
+                        Version = 1,
+                        Visible = true
                     }
                 }
             };
@@ -830,17 +712,14 @@ namespace OsmSharp.API.Tests
             Assert.IsFalse(result.IsError);
             Assert.IsNotNull(result.Data);
             var diffResult = result.Data;
-            Assert.IsNotNull(diffResult.osmresult);
-            Assert.AreEqual(1, diffResult.osmresult.Length);
-            var osmresult = diffResult.osmresult[0];
-            Assert.IsInstanceOf<relationresult>(osmresult);
-            var noderesult = osmresult as relationresult;
-            Assert.AreEqual(1, noderesult.old_id);
-            Assert.IsTrue(noderesult.old_idSpecified);
-            Assert.AreEqual(1, noderesult.new_id);
-            Assert.IsTrue(noderesult.new_idSpecified);
-            Assert.AreEqual(2, noderesult.new_version);
-            Assert.IsTrue(noderesult.new_versionSpecified);
+            Assert.IsNotNull(diffResult.Results);
+            Assert.AreEqual(1, diffResult.Results.Length);
+            var osmresult = diffResult.Results[0];
+            Assert.IsInstanceOf<RelationResult>(osmresult);
+            var noderesult = osmresult as RelationResult;
+            Assert.AreEqual(1, noderesult.OldId);
+            Assert.AreEqual(1, noderesult.NewId);
+            Assert.AreEqual(2, noderesult.NewVersion);
         }
     }
 }

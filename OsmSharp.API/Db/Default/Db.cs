@@ -104,7 +104,7 @@ namespace OsmSharp.API.Db.Default
         /// <summary>
         /// Gets all osm objects with the given types, the given id's and the given version #'s.
         /// </summary>
-        public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id, IList<long> version)
+        public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id, IList<int> version)
         {
             return _dataSource.Get(type, id, version);
         }

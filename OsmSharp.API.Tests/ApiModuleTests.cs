@@ -23,7 +23,7 @@
 using Nancy;
 using Nancy.Testing;
 using NUnit.Framework;
-using OsmSharp.Osm.Xml.v0_6;
+using OsmSharp.Changesets;
 
 namespace OsmSharp.API.Tests
 {
@@ -39,8 +39,17 @@ namespace OsmSharp.API.Tests
         [Test]
         public void TestGetNode()
         {
-            var api = new Mocks.MockApiInstance(new Node[] {
-                Node.Create(1, 10, 100) }, new Way[0], new Relation[0]);
+            var api = new Mocks.MockApiInstance(
+                new Node[] {
+                    new Node()
+                    {
+                        Id = 1,
+                        Latitude = 10,
+                        Longitude = 100
+                    }
+                },
+                new Way[0],
+                new Relation[0]);
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
@@ -54,13 +63,13 @@ namespace OsmSharp.API.Tests
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             var osm = result.DeserializeOsmXml();
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.node);
-            Assert.AreEqual(1, osm.node.Length);
-            var node = osm.node[0];
+            Assert.IsNotNull(osm.Nodes);
+            Assert.AreEqual(1, osm.Nodes.Length);
+            var node = osm.Nodes[0];
             Assert.IsNotNull(node);
-            Assert.AreEqual(1, node.id);
-            Assert.AreEqual(10, node.lat);
-            Assert.AreEqual(100, node.lon);
+            Assert.AreEqual(1, node.Id);
+            Assert.AreEqual(10, node.Latitude);
+            Assert.AreEqual(100, node.Longitude);
 
             result = browser.Get("/test/api/0.6/node/10", with =>
             {
@@ -77,7 +86,11 @@ namespace OsmSharp.API.Tests
         public void TestGetWay()
         {
             var api = new Mocks.MockApiInstance(new Node[0], new Way[] {
-                Way.Create(1, 1, 2, 3)
+                new Way()
+                {
+                    Id = 1,
+                    Nodes = new long[] { 1, 2, 3 }
+                }
             }, new Relation[0]);
             ApiBootstrapper.SetInstance("test", api);
 
@@ -92,16 +105,16 @@ namespace OsmSharp.API.Tests
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             var osm = result.DeserializeOsmXml();
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.way);
-            Assert.AreEqual(1, osm.way.Length);
-            var way = osm.way[0];
+            Assert.IsNotNull(osm.Ways);
+            Assert.AreEqual(1, osm.Ways.Length);
+            var way = osm.Ways[0];
             Assert.IsNotNull(way);
-            Assert.AreEqual(1, way.id);
-            Assert.IsNotNull(way.nd);
-            Assert.AreEqual(3, way.nd.Length);
-            Assert.AreEqual(1, way.nd[0].@ref);
-            Assert.AreEqual(2, way.nd[1].@ref);
-            Assert.AreEqual(3, way.nd[2].@ref);
+            Assert.AreEqual(1, way.Id);
+            Assert.IsNotNull(way.Nodes);
+            Assert.AreEqual(3, way.Nodes.Length);
+            Assert.AreEqual(1, way.Nodes[0]);
+            Assert.AreEqual(2, way.Nodes[1]);
+            Assert.AreEqual(3, way.Nodes[2]);
 
             result = browser.Get("/test/api/0.6/way/10", with =>
             {
@@ -119,10 +132,31 @@ namespace OsmSharp.API.Tests
         {
             var api = new Mocks.MockApiInstance(new Node[0], new Way[0], new Relation[]
                 {
-                    Relation.Create(1, 
-                        RelationMember.Create(1, "test", OsmGeoType.Node),
-                        RelationMember.Create(2, "another_test", OsmGeoType.Way),
-                        RelationMember.Create(3, "yet_another_test", OsmGeoType.Relation))
+                    new Relation()
+                    {
+                        Id = 1,
+                        Members = new RelationMember[]
+                        {
+                            new RelationMember()
+                            {
+                                Id = 1,
+                                Role = "test",
+                                Type = OsmGeoType.Node
+                            },
+                            new RelationMember()
+                            {
+                                Id = 2,
+                                Role = "another_test",
+                                Type = OsmGeoType.Way
+                            },
+                            new RelationMember()
+                            {
+                                Id = 3,
+                                Role = "yet_another_test",
+                                Type = OsmGeoType.Relation
+                            }
+                        }
+                    }
                 });
             ApiBootstrapper.SetInstance("test", api);
 
@@ -137,22 +171,22 @@ namespace OsmSharp.API.Tests
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             var osm = result.DeserializeOsmXml();
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.relation);
-            Assert.AreEqual(1, osm.relation.Length);
-            var relation = osm.relation[0];
+            Assert.IsNotNull(osm.Relations);
+            Assert.AreEqual(1, osm.Relations.Length);
+            var relation = osm.Relations[0];
             Assert.IsNotNull(relation);
-            Assert.AreEqual(1, relation.id);
-            Assert.IsNotNull(relation.member);
-            Assert.AreEqual(3, relation.member.Length);
-            Assert.AreEqual(1, relation.member[0].@ref);
-            Assert.AreEqual("test", relation.member[0].role);
-            Assert.AreEqual(memberType.node, relation.member[0].type);
-            Assert.AreEqual(2, relation.member[1].@ref);
-            Assert.AreEqual("another_test", relation.member[1].role);
-            Assert.AreEqual(memberType.way, relation.member[1].type);
-            Assert.AreEqual(3, relation.member[2].@ref);
-            Assert.AreEqual("yet_another_test", relation.member[2].role);
-            Assert.AreEqual(memberType.relation, relation.member[2].type);
+            Assert.AreEqual(1, relation.Id);
+            Assert.IsNotNull(relation.Members);
+            Assert.AreEqual(3, relation.Members.Length);
+            Assert.AreEqual(1, relation.Members[0].Id);
+            Assert.AreEqual("test", relation.Members[0].Role);
+            Assert.AreEqual(OsmGeoType.Node, relation.Members[0].Type);
+            Assert.AreEqual(2, relation.Members[1].Id);
+            Assert.AreEqual("another_test", relation.Members[1].Role);
+            Assert.AreEqual(OsmGeoType.Way, relation.Members[1].Type);
+            Assert.AreEqual(3, relation.Members[2].Id);
+            Assert.AreEqual("yet_another_test", relation.Members[2].Role);
+            Assert.AreEqual(OsmGeoType.Relation, relation.Members[2].Type);
 
             result = browser.Get("/test/api/0.6/relation/10", with =>
             {
@@ -169,45 +203,38 @@ namespace OsmSharp.API.Tests
         public void TestGetCapabilities()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            api.Capabilities = new api()
+            api.Capabilities = new Capabilities()
             {
-                version = new version()
+                Version = new Version()
                 {
-                    minimum = 0.6,
-                    minimumSpecified = true,
-                    maximum = 0.6,
-                    maximumSpecified = true
+                    Maximum = 0.6,
+                    Minimum = 0.6
                 },
-                area = new area()
+                Area = new Area()
                 {
-                    maximum = 0.25,
-                    maximumSpecified = true
+                    Maximum = 0.25
                 },
-                tracepoints = new tracepoints()
+                Changesets = new OsmSharp.API.Changesets()
                 {
-                    per_page = 5000,
-                    per_pageSpecified = true
+                    MaximumElements = 50000
                 },
-                waynodes = new waynodes()
+                Status = new Status()
                 {
-                    maximum = 2000,
-                    maximumSpecified = true
+                    Api = "online",
+                    Database = "online",
+                    Gpx = "online"
                 },
-                changesets = new changesets()
+                Timeout = new Timeout()
                 {
-                    maximum_elements = 50000,
-                    maximum_elementsSpecified = true
+                    Seconds = 300
                 },
-                timeout = new timeout()
+                Tracepoints = new Tracepoints()
                 {
-                    seconds = 300,
-                    secondsSpecified = true
+                    PerPage = 5000
                 },
-                status = new status()
+                WayNodes = new WayNodes()
                 {
-                    api = "online",
-                    database = "online",
-                    gpx = "online"
+                    Maximum = 2000
                 }
             };
             ApiBootstrapper.SetInstance("test", api);
@@ -223,7 +250,7 @@ namespace OsmSharp.API.Tests
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             var osm = result.DeserializeOsmXml();
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.api);
+            Assert.IsNotNull(osm.Api);
 
             result = browser.Get("/test/api/0.6/capabilities", with =>
             {
@@ -233,7 +260,7 @@ namespace OsmSharp.API.Tests
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             osm = result.DeserializeOsmXml();
             Assert.IsNotNull(osm);
-            Assert.IsNotNull(osm.api);
+            Assert.IsNotNull(osm.Api);
         }
 
         /// <summary>
@@ -305,20 +332,20 @@ namespace OsmSharp.API.Tests
             var result = browser.Put("/test/api/0.6/changeset/create", with =>
             {
                 with.HttpRequest();
-                with.OsmXmlBody(new osm()
+                with.OsmXmlBody(new Osm()
                 {
-                    changeset = new changeset[]
+                    Changesets = new Changeset[]
                     {
-                        new changeset()
+                        new Changeset()
                         {
-                            tag = new tag[]
+                            Tags = new Tags.TagsCollection(new Tags.Tag[]
                             {
-                                new tag()
+                                new Tags.Tag()
                                 {
-                                    k = "test_key",
-                                    v = "test_value"
+                                    Key = "test_key",
+                                    Value = "test_value"
                                 }
-                            }
+                            })
                         }
                     }
                 });
