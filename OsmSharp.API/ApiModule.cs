@@ -502,8 +502,6 @@ namespace OsmSharp.API
         /// <summary>
         /// Read: GET /api/0.6/[node|way|relation]/#id
         /// </summary>
-        /// <param name="_"></param>
-        /// <returns></returns>
         private dynamic GetElement(dynamic _, OsmGeoType type)
         {
             try

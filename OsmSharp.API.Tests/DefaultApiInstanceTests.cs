@@ -24,6 +24,7 @@ using NUnit.Framework;
 using OsmSharp.API.Db.Default;
 using OsmSharp.Changesets;
 using OsmSharp.Db;
+using OsmSharp.Db.Memory;
 using OsmSharp.Tags;
 using System;
 

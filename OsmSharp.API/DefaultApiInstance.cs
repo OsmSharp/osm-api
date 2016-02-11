@@ -42,9 +42,6 @@ namespace OsmSharp.API
             _db = db;
         }
 
-        private long _nextChangesetId = 1;
-        private Dictionary<long, Changeset> _openChangesets = new Dictionary<long, Changeset>();
-
         /// <summary>
         /// Gets the capabilities.
         /// </summary>
@@ -202,14 +199,7 @@ namespace OsmSharp.API
         /// </summary>
         public ApiResult<long> CreateChangeset(Changeset changeset)
         {
-            lock (_openChangesets)
-            {
-                var id = _nextChangesetId;
-                _nextChangesetId++;
-
-                _openChangesets.Add(id, changeset);
-                return new ApiResult<long>(id);
-            }
+            return new ApiResult<long>(_db.OpenChangeset(changeset));
         }
 
         /// <summary>
@@ -217,25 +207,13 @@ namespace OsmSharp.API
         /// </summary>
         public ApiResult<DiffResult> ApplyChangeset(long id, OsmChange osmChange)
         {
-            // validate changeset.
-            var validated = this.ValidateChangeset(osmChange);
-            if (validated.IsError)
-            {
-                return validated.Convert<DiffResult>();
-            }
-            if (!validated.Data)
-            {
-                return new ApiResult<DiffResult>(ApiResultStatusCode.Exception,
-                    "Changeset could not be applied, validation failed.");
-            }
-
             var diffResultResult = _db.ApplyChangeset(id, osmChange);
             if (diffResultResult.Status == DiffResultStatus.BestEffortOK ||
                 diffResultResult.Status == DiffResultStatus.OK)
             {
                 return new ApiResult<DiffResult>(diffResultResult.Result);
             }
-            switch(diffResultResult.Status)
+            switch (diffResultResult.Status)
             {
                 case DiffResultStatus.Conflict:
                 case DiffResultStatus.TooBig:
@@ -248,78 +226,13 @@ namespace OsmSharp.API
                 string.Format("Unknown status: {0}.", 
                     diffResultResult.Status.ToInvariantString().ToLowerInvariant()));
         }
-
-        /// <summary>
-        /// Validates changeset against the current state of the data.
-        /// </summary>
-        private ApiResult<bool> ValidateChangeset(OsmChange osmChange)
-        {
-            if (osmChange.Create != null)
-            {
-                for (var i = 0; i < osmChange.Create.Length; i++)
-                {
-                    if (osmChange.Create[i] != null && 
-                        osmChange.Create[i].Version > 1)
-                    {
-                        return new ApiResult<bool>(false);
-                    }
-                }
-            }
-            if (osmChange.Modify != null)
-            {
-                for (var i = 0; i < osmChange.Modify.Length; i++)
-                {
-                    var modification = osmChange.Modify[i];
-                    if (modification != null)
-                    {
-                        if (!modification.Id.HasValue)
-                        {
-                            return new ApiResult<bool>(false);
-                        }
-
-                        var osmGeo = _db.Get(modification.Type, modification.Id.Value);
-                        if (osmGeo == null)
-                        {
-                            return new ApiResult<bool>(false);
-                        }
-                        if (osmGeo.Version != modification.Version)
-                        {
-                            return new ApiResult<bool>(false);
-                        }
-                    }
-                }
-            }
-            if (osmChange.Delete != null)
-            {
-                for (var i = 0; i < osmChange.Delete.Length; i++)
-                {
-                    var delete = osmChange.Modify[i];
-                    if (!delete.Id.HasValue)
-                    {
-                        return new ApiResult<bool>(false);
-                    }
-
-                    var osmGeo = _db.Get(delete.Type, delete.Id.Value);
-                    if (osmGeo == null)
-                    {
-                        return new ApiResult<bool>(false);
-                    }
-                    if (osmGeo.Version != delete.Version)
-                    {
-                        return new ApiResult<bool>(false);
-                    }
-                }
-            }
-
-            return new ApiResult<bool>(true);
-        }
-
+        
         /// <summary>
         /// Closes the changeset with the given id.
         /// </summary>
         public ApiResult<bool> CloseChangeset(long id)
         {
-            return new ApiResult<bool>(true);
+            return new ApiResult<bool>(_db.CloseChangeset(id));
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ using Nancy.Hosting.Self;
 using OsmSharp.API.Authentication;
 using OsmSharp.API.Db.Default;
 using OsmSharp.Db;
+using OsmSharp.Db.Memory;
 using System;
 using System.IO;
 
@@ -49,7 +50,7 @@ namespace OsmSharp.API.Selfhost
                 new MemoryHistoryDb(), userDb);
 
             // add some test-data.
-            using (var stream = new FileInfo(@"D:\work\data\OSM\planet\europe\belgium-latest.osm.pbf").OpenRead())
+            using (var stream = new FileInfo(@"D:\work\data\OSM\kempen.osm.pbf").OpenRead())
             {
                 var source = new OsmSharp.Streams.PBFOsmStreamSource(stream);
                 db.Add(source);
