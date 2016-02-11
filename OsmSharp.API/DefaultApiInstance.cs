@@ -120,6 +120,13 @@ namespace OsmSharp.API
                 {
                     Generator = "OsmSharp.API",
                     Version = 0.6,
+                    Bounds = new Bounds()
+                    {
+                        MinLongitude = left,
+                        MinLatitude = bottom,
+                        MaxLongitude = right,
+                        MaxLatitude = top
+                    },
                     Nodes = nodes.ToArray(),
                     Ways = ways.ToArray(),
                     Relations = relations.ToArray()
