@@ -23,11 +23,9 @@
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Diagnostics;
-using OsmSharp.API.Authentication.Basic;
 using Nancy.TinyIoc;
-using Nancy.Authentication.Stateless;
 
-namespace OsmSharp.API
+namespace OsmSharp.API.Selfhost
 {
     public class NancyCustomBootstrapper : DefaultNancyBootstrapper
     {

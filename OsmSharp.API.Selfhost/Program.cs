@@ -26,6 +26,7 @@ using OsmSharp.API.Db.Default;
 using OsmSharp.Db;
 using OsmSharp.Db.Memory;
 using System;
+using System.Data.SQLite;
 using System.IO;
 
 namespace OsmSharp.API.Selfhost
@@ -34,6 +35,12 @@ namespace OsmSharp.API.Selfhost
     {
         static void Main(string[] args)
         {
+            // enable logging.
+            OsmSharp.Logging.Logger.LogAction = (origin, level, message, parameters) =>
+            {
+                Console.WriteLine("{0}:{1} - {2}", origin, level, message);
+            };
+
             // WARNING: generate something different for your own apps!!
             SaltedHashAlgorithm.GlobalSalt = "K3a@Tb~*ETDczTe]8xpY?7RtbKgz63^5.M#&Db~MwM?!*";
 
@@ -45,16 +52,10 @@ namespace OsmSharp.API.Selfhost
                 DisplayName = "demo"
             };
             userDb.AddUser(user, SaltedHashAlgorithm.HashPassword(user.DisplayName, "demo"));
-
+            
+            var historyDb = new MemoryHistoryDb();
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(), userDb);
-
-            // add some test-data.
-            using (var stream = new FileInfo(@"D:\work\data\OSM\kempen.osm.pbf").OpenRead())
-            {
-                var source = new OsmSharp.Streams.PBFOsmStreamSource(stream);
-                db.Add(source);
-            }
+                historyDb, userDb);
 
             ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
 

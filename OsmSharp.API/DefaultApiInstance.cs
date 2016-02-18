@@ -214,7 +214,7 @@ namespace OsmSharp.API
         /// </summary>
         public ApiResult<DiffResult> ApplyChangeset(long id, OsmChange osmChange)
         {
-            var diffResultResult = _db.ApplyChangeset(id, osmChange);
+            var diffResultResult = _db.ApplyChangeset(id, osmChange, true);
             if (diffResultResult.Status == DiffResultStatus.BestEffortOK ||
                 diffResultResult.Status == DiffResultStatus.OK)
             {

@@ -38,6 +38,8 @@ namespace OsmSharp.API
     /// </summary>
     public class ApiModule : NancyModule
     {
+        private static OsmSharp.Logging.Logger _logger = new OsmSharp.Logging.Logger("apimodule");
+
         /// <summary>
         /// Creates a new api module.
         /// </summary>
@@ -125,6 +127,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetCapabilities");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -155,6 +158,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetMap");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -210,6 +214,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetPermissions");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -237,6 +242,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "PutChangesetCreate");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -255,8 +261,25 @@ namespace OsmSharp.API
                     return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError).WithModel(
                         "No data or body could not be parsed.");
                 }
-                
-                var id = instance.CreateChangeset(osm.Changesets[0]);
+
+                // get user.
+                UserIdentity user = null;
+                if (this.Context.CurrentUser == null ||
+                  !(this.Context.CurrentUser is UserIdentity))
+                {
+                    return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError).WithModel(
+                        "Current authenticated user could not be identified.");
+                }
+                user = this.Context.CurrentUser as UserIdentity;
+
+                // add user and time.
+                var changeset = osm.Changesets[0];
+                changeset.UserId = user.UserId;
+                changeset.UserName = user.UserName;
+                changeset.Open = true;
+                changeset.CreatedAt = DateTime.Now.ToUniversalTime();
+
+                var id = instance.CreateChangeset(changeset);
                 if (id.IsError)
                 {
                     return this.BuildResponse(id);
@@ -279,6 +302,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetChangeset");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -306,6 +330,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "PutChangesetUpdate");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -333,6 +358,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "PutChangesetClose");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -364,6 +390,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetChangesetDownload");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -391,6 +418,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "PostChangesetExpandBB");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -417,6 +445,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetChangesetQuery");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -454,6 +483,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "PostChangesetUpload");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -462,7 +492,39 @@ namespace OsmSharp.API
                     return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
                 }
 
+                // get user.
+                UserIdentity user = null;
+                if (this.Context.CurrentUser == null ||
+                  !(this.Context.CurrentUser is UserIdentity))
+                {
+                    return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError).WithModel(
+                        "Current authenticated user could not be identified.");
+                }
+                user = this.Context.CurrentUser as UserIdentity;
+
                 var osmChange = this.Bind<OsmChange>();
+
+                // prepare changeset.
+                if (osmChange.Modify != null)
+                {
+                    foreach(var modify in osmChange.Modify)
+                    {
+                        modify.TimeStamp = DateTime.Now.ToUniversalTime();
+                        modify.UserId = user.UserId;
+                        modify.UserName = user.UserName;
+                        modify.Visible = true;
+                    }
+                }
+                if (osmChange.Create != null)
+                {
+                    foreach (var create in osmChange.Create)
+                    {
+                        create.TimeStamp = DateTime.Now.ToUniversalTime();
+                        create.UserId = user.UserId;
+                        create.UserName = user.UserName;
+                        create.Visible = true;
+                    }
+                }
 
                 return this.BuildResponse(instance.ApplyChangeset((long)_.changesetid, osmChange));
             }
@@ -483,6 +545,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "PutElementCreate");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -507,6 +570,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetElement");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -555,6 +619,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "PutElementUpdate");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -582,6 +647,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "DeleteElement");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -608,6 +674,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetElementHistory");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -634,6 +701,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetElementVersion");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -660,6 +728,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetElementMultiple");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -686,6 +755,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetElementRelations");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -712,6 +782,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetWaysForNode");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -738,6 +809,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetElementFull");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -764,6 +836,7 @@ namespace OsmSharp.API
             try
             {
                 this.EnableCors();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetUserDetails");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -798,6 +871,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetCurrentUserDetails");
 
                 // get instance and check if active.
                 IApiInstance instance;
@@ -825,6 +899,7 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 this.RequiresAuthentication();
+                _logger.Log(Logging.TraceEventType.Verbose, "GetCurrentUserPreferences");
 
                 // get instance and check if active.
                 IApiInstance instance;

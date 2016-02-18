@@ -88,7 +88,7 @@ namespace OsmSharp.API.Db.Default
         /// <summary>
         /// Gets all latest versions of osm objects with the given types and the given id's.
         /// </summary>
-        public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id)
+        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id)
         {
             return _dataSource.Get(type, id);
         }
@@ -104,7 +104,7 @@ namespace OsmSharp.API.Db.Default
         /// <summary>
         /// Gets all osm objects with the given types, the given id's and the given version #'s.
         /// </summary>
-        public IList<OsmGeo> Get(IList<OsmGeoType> type, IList<long> id, IList<int> version)
+        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id, IList<int> version)
         {
             return _dataSource.Get(type, id, version);
         }
@@ -112,7 +112,7 @@ namespace OsmSharp.API.Db.Default
         /// <summary>
         /// Gets all latest versions of osm objects within the given bounding box.
         /// </summary>
-        public IList<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
+        public IEnumerable<OsmGeo> Get(float minLatitude, float minLongitude, float maxLatitude, float maxLongitude)
         {
             return _dataSource.Get(minLatitude, minLongitude, maxLatitude, maxLongitude);
         }
@@ -128,7 +128,7 @@ namespace OsmSharp.API.Db.Default
         /// <summary>
         /// Applies the given changeset.
         /// </summary>
-        public DiffResultResult ApplyChangeset(long id, OsmChange changeset, bool bestEffort = false)
+        public DiffResultResult ApplyChangeset(long id, OsmChange changeset, bool bestEffort = true)
         {
             return _dataSource.ApplyChangeset(id, changeset, bestEffort);
         }
