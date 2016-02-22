@@ -79,6 +79,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="ApiBootstrapper.cs" />
     <Compile Include="ApiResult.cs" />
     <Compile Include="ApiModuleExtensions.cs" />

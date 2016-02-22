@@ -85,6 +85,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="ApiModuleTests.cs" />
     <Compile Include="DefaultApiInstanceTests.cs" />
     <Compile Include="Extensions.cs" />

@@ -18,5 +18,5 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.10.0.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+[assembly: AssemblyVersion("0.10.0")] // semantic versioning Major.Minor.Patch.Build
+[assembly: AssemblyInformationalVersion("0.10.0-alpha")] // do not change this; build server replace this automatically.
