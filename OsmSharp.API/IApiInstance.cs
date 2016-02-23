@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using OsmSharp.Changesets;
+using System;
 
 namespace OsmSharp.API
 {
@@ -29,6 +30,11 @@ namespace OsmSharp.API
     /// </summary>
     public interface IApiInstance
     {
+        /// <summary>
+        /// Even raised when there is a change.
+        /// </summary>
+        event Action<OsmChange> Change;
+
         /// <summary>
         /// Gets the api capabilities.
         /// </summary>

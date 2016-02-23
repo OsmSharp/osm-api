@@ -44,6 +44,8 @@ namespace OsmSharp.API.Tests.Mocks
 
             _changesets = new List<Changeset>();
         }
+        
+        public event Action<OsmChange> Change;
 
         public ApiResult<DiffResult> ApplyChangeset(long id, OsmChange osmChange)
         {

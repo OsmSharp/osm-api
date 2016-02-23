@@ -24,6 +24,7 @@ using OsmSharp.API.Db;
 using System.Collections.Generic;
 using OsmSharp.Changesets;
 using OsmSharp.Db;
+using System;
 
 namespace OsmSharp.API
 {
@@ -41,6 +42,11 @@ namespace OsmSharp.API
         {
             _db = db;
         }
+
+        /// <summary>
+        /// Event raised when there is a change.
+        /// </summary>
+        public event Action<OsmChange> Change;
 
         /// <summary>
         /// Gets the capabilities.
@@ -218,6 +224,11 @@ namespace OsmSharp.API
             if (diffResultResult.Status == DiffResultStatus.BestEffortOK ||
                 diffResultResult.Status == DiffResultStatus.OK)
             {
+                if (this.Change != null)
+                {
+                    this.Change(osmChange);
+                }
+
                 return new ApiResult<DiffResult>(diffResultResult.Result);
             }
             switch (diffResultResult.Status)

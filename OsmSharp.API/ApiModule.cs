@@ -194,7 +194,7 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.GetMap(left, bottom, right, top));
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
