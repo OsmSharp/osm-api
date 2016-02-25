@@ -212,6 +212,14 @@ namespace OsmSharp.API
         /// </summary>
         public ApiResult<long> CreateChangeset(Changeset changeset)
         {
+            if (changeset.MinLatitude == null)
+            {
+                changeset.MinLatitude = -90;
+                changeset.MinLongitude = -180;
+                changeset.MaxLatitude = 90;
+                changeset.MaxLongitude = 180;
+            }
+
             return new ApiResult<long>(_db.OpenChangeset(changeset));
         }
 
@@ -220,7 +228,7 @@ namespace OsmSharp.API
         /// </summary>
         public ApiResult<DiffResult> ApplyChangeset(long id, OsmChange osmChange)
         {
-            var diffResultResult = _db.ApplyChangeset(id, osmChange, true);
+            var diffResultResult = _db.ApplyChangeset(id, osmChange);
             if (diffResultResult.Status == DiffResultStatus.BestEffortOK ||
                 diffResultResult.Status == DiffResultStatus.OK)
             {

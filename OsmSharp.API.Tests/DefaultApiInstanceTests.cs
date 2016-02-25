@@ -21,10 +21,11 @@
 // THE SOFTWARE.
 
 using NUnit.Framework;
+using OsmSharp.API.Db;
 using OsmSharp.API.Db.Default;
 using OsmSharp.Changesets;
 using OsmSharp.Db;
-using OsmSharp.Db.Memory;
+using OsmSharp.Db.Impl;
 using OsmSharp.Tags;
 using System;
 
@@ -43,7 +44,7 @@ namespace OsmSharp.API.Tests
         public void TestGetNode()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -58,7 +59,8 @@ namespace OsmSharp.API.Tests
                 {
                     Id = 1,
                     Latitude = 10,
-                    Longitude = 100
+                    Longitude = 100,
+                    Version = 1
                 }
             });
 
@@ -83,7 +85,7 @@ namespace OsmSharp.API.Tests
         public void TestGetWay()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -97,7 +99,8 @@ namespace OsmSharp.API.Tests
                 new Way()
                 {
                     Id = 1,
-                    Nodes = new long[] { 1, 2, 3 }
+                    Nodes = new long[] { 1, 2, 3 },
+                    Version = 1
                 }
             });
 
@@ -125,7 +128,7 @@ namespace OsmSharp.API.Tests
         public void TestGetRelation()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -159,7 +162,8 @@ namespace OsmSharp.API.Tests
                             Role = "yet_another_test",
                             Type = OsmGeoType.Relation
                         }
-                    }
+                    },
+                    Version = 1
                 }
             });
 
@@ -179,10 +183,10 @@ namespace OsmSharp.API.Tests
             Assert.AreEqual(1, relation.Members[0].Id);
             Assert.AreEqual("test", relation.Members[0].Role);
             Assert.AreEqual(OsmGeoType.Node, relation.Members[0].Type);
-            Assert.AreEqual(2, relation.Members[1].Type);
+            Assert.AreEqual(2, relation.Members[1].Id);
             Assert.AreEqual("another_test", relation.Members[1].Role);
             Assert.AreEqual(OsmGeoType.Way, relation.Members[1].Type);
-            Assert.AreEqual(3, relation.Members[2].Type);
+            Assert.AreEqual(3, relation.Members[2].Id);
             Assert.AreEqual("yet_another_test", relation.Members[2].Role);
             Assert.AreEqual(OsmGeoType.Relation, relation.Members[2].Type);
         }
@@ -194,7 +198,7 @@ namespace OsmSharp.API.Tests
         public void TestOpenChangeset()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -217,7 +221,7 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetAddNode()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -262,7 +266,7 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetDeleteNode()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -270,8 +274,9 @@ namespace OsmSharp.API.Tests
                 {
                     Id = 1,
                     Latitude = 10,
-                    Longitude = 100
-                });
+                    Longitude = 100,
+                    Version = 1
+            });
 
             var changesetResult = api.CreateChangeset(new Changeset());
             var osmChange = new OsmChange()
@@ -314,7 +319,7 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetUpdateNode()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -323,7 +328,8 @@ namespace OsmSharp.API.Tests
                 Id = 1,
                 Latitude = 10,
                 Longitude = 100,
-                TimeStamp = DateTime.Now.AddYears(-1)
+                TimeStamp = DateTime.Now.AddYears(-1),
+                Version = 1
             });
 
             var changesetResult = api.CreateChangeset(new Changeset());
@@ -368,7 +374,7 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetAddWay()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -412,15 +418,16 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetDeleteWay()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
             db.Add(new Way()
             {
-                Id = -1,
+                Id = 1,
                 Nodes =new long[] { 1, 3 },
-                TimeStamp = DateTime.Now.AddYears(-1)
+                TimeStamp = DateTime.Now.AddYears(-1),
+                Version = 1
             });
 
             var changesetResult = api.CreateChangeset(new Changeset());
@@ -437,7 +444,7 @@ namespace OsmSharp.API.Tests
                         Nodes = new long[] {1, 3 },
                         TimeStamp = DateTime.Now,
                         Visible = true,
-                        Version = 1,
+                        Version = 1
                     }
                 }
             };
@@ -464,15 +471,16 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetUpdateWay()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
             db.Add(new Way()
             {
-                Id = -1,
+                Id = 1,
                 Nodes = new long[] { 1, 3 },
-                TimeStamp = DateTime.Now.AddYears(-1)
+                TimeStamp = DateTime.Now.AddYears(-1),
+                Version = 1
             });
 
             var changesetResult = api.CreateChangeset(new Changeset());
@@ -516,7 +524,7 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetAddRelation()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -574,7 +582,7 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetDeleteRelation()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -596,7 +604,8 @@ namespace OsmSharp.API.Tests
                             Type = OsmGeoType.Way
                         }
                     },
-                TimeStamp = DateTime.Now.AddYears(-1)
+                TimeStamp = DateTime.Now.AddYears(-1),
+                Version = 1
             });
 
             var changesetResult = api.CreateChangeset(new Changeset());
@@ -607,7 +616,7 @@ namespace OsmSharp.API.Tests
                 {
                     new Relation()
                     {
-                        Id = -1,
+                        Id = 1,
                         Members = new RelationMember[]
                             {
                                 new RelationMember()
@@ -650,7 +659,7 @@ namespace OsmSharp.API.Tests
         public void TestApplyChangesetUpdateRelation()
         {
             var db = new OsmSharp.API.Db.Default.Db(
-                new MemoryHistoryDb(),
+                new MemoryHistoryDb().CreateHistoryDb(),
                 new MemoryUserDb());
             var api = new DefaultApiInstance(db);
 
@@ -672,7 +681,8 @@ namespace OsmSharp.API.Tests
                             Type = OsmGeoType.Way
                         }
                     },
-                TimeStamp = DateTime.Now.AddYears(-1)
+                TimeStamp = DateTime.Now.AddYears(-1),
+                Version = 1
             });
 
             var changesetResult = api.CreateChangeset(new Changeset());

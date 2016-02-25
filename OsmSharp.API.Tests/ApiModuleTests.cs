@@ -327,7 +327,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/test/api/0.6/changeset/create", with =>
             {
@@ -365,7 +376,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/changeset/1", with =>
             {
@@ -392,7 +414,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/changeset/1/close", with =>
             {
@@ -406,7 +439,7 @@ namespace OsmSharp.API.Tests
                 with.HttpRequest();
             });
 
-            Assert.AreEqual(HttpStatusCode.NotImplemented, result.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         }
 
         /// <summary>
@@ -419,7 +452,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Get("/notatest/api/0.6/changeset/1/download", with =>
             {
@@ -446,7 +490,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Post("/notatest/api/0.6/changeset/1/expand_bbox", with =>
             {
@@ -473,7 +528,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/node/create", with =>
             {
@@ -500,7 +566,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/way/create", with =>
             {
@@ -527,7 +604,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/relation/create", with =>
             {
@@ -554,7 +642,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/node/1", with =>
             {
@@ -581,7 +680,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/way/1", with =>
             {
@@ -608,7 +718,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Put("/notatest/api/0.6/relation/1", with =>
             {
@@ -635,7 +756,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Delete("/notatest/api/0.6/node/1", with =>
             {
@@ -662,7 +794,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Delete("/notatest/api/0.6/way/1", with =>
             {
@@ -689,7 +832,18 @@ namespace OsmSharp.API.Tests
             ApiBootstrapper.SetInstance("test", api);
 
             var bootstrapper = new DefaultNancyBootstrapper();
-            var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
+            var browser = new Browser(cfg =>
+            {
+                cfg.Module<ApiModule>();
+                cfg.RequestStartup((container, pipelines, context) =>
+                {
+                    context.CurrentUser = new Authentication.UserIdentity { UserName = "Bob" };
+                });
+            }, to =>
+            {
+                to.Accept("application/xml");
+                to.BasicAuth("demo", "demo");
+            });
 
             var result = browser.Delete("/notatest/api/0.6/relation/1", with =>
             {

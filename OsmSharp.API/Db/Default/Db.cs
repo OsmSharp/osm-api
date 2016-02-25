@@ -53,14 +53,6 @@ namespace OsmSharp.API.Db.Default
         }
 
         /// <summary>
-        /// Adds the given osm object in the db exactly as given.
-        /// </summary>
-        public void Add(OsmGeo osmGeo)
-        {
-            _dataSource.Add(osmGeo);
-        }
-
-        /// <summary>
         /// Adds the given osm objects in the db exactly as given.
         /// </summary>
         public void Add(IEnumerable<OsmGeo> osmGeos)
@@ -77,36 +69,27 @@ namespace OsmSharp.API.Db.Default
         }
 
         /// <summary>
-        /// Gets all the objects in the form of a stream source.
+        /// Gets all the objects.
         /// </summary>
-        /// <returns></returns>
-        public OsmStreamSource Get()
+        public IEnumerable<OsmGeo> Get()
         {
             return _dataSource.Get();
         }
 
         /// <summary>
-        /// Gets all latest versions of osm objects with the given types and the given id's.
+        /// Gets all visible objects for the given keys.
         /// </summary>
-        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id)
+        public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoKey> keys)
         {
-            return _dataSource.Get(type, id);
+            return _dataSource.Get(keys);
         }
 
         /// <summary>
-        /// Gets an osm object of the given type, the given id and the given version #.
+        /// Gets all objects for the given keys.
         /// </summary>
-        public OsmGeo Get(OsmGeoType type, long id, int version)
+        public IEnumerable<OsmGeo> Get(IEnumerable<OsmGeoVersionKey> keys)
         {
-            return _dataSource.Get(type, id, version);
-        }
-
-        /// <summary>
-        /// Gets all osm objects with the given types, the given id's and the given version #'s.
-        /// </summary>
-        public IList<OsmGeo> Get(OsmGeoType type, IList<long> id, IList<int> version)
-        {
-            return _dataSource.Get(type, id, version);
+            return _dataSource.Get(keys);
         }
 
         /// <summary>
@@ -128,17 +111,17 @@ namespace OsmSharp.API.Db.Default
         /// <summary>
         /// Applies the given changeset.
         /// </summary>
-        public DiffResultResult ApplyChangeset(long id, OsmChange changeset, bool bestEffort = true)
+        public DiffResultResult ApplyChangeset(long id, OsmChange changeset)
         {
-            return _dataSource.ApplyChangeset(id, changeset, bestEffort);
+            return _dataSource.ApplyChangeset(id, changeset);
         }
 
         /// <summary>
         /// Updates the changeset with the new info.
         /// </summary>
-        public bool UpdateChangesetInfo(Changeset info)
+        public void UpdateChangesetInfo(Changeset info)
         {
-            return _dataSource.UpdateChangesetInfo(info);
+            _dataSource.UpdateChangesetInfo(info);
         }
 
         /// <summary>
@@ -147,6 +130,22 @@ namespace OsmSharp.API.Db.Default
         public bool CloseChangeset(long id)
         {
             return _dataSource.CloseChangeset(id);
+        }
+
+        /// <summary>
+        /// Gets the changeset with the given id.
+        /// </summary>
+        public Changeset GetChangeset(long id)
+        {
+            return _dataSource.GetChangeset(id);
+        }
+
+        /// <summary>
+        /// Gets the changes for the changeset with the given id.
+        /// </summary>
+        public OsmChange GetChanges(long id)
+        {
+            return _dataSource.GetChanges(id);
         }
 
         /// <summary>

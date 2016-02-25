@@ -23,11 +23,7 @@
 using Nancy.Hosting.Self;
 using OsmSharp.API.Authentication;
 using OsmSharp.API.Db.Default;
-using OsmSharp.Db;
-using OsmSharp.Db.Memory;
 using System;
-using System.Data.SQLite;
-using System.IO;
 
 namespace OsmSharp.API.Selfhost
 {
@@ -52,12 +48,21 @@ namespace OsmSharp.API.Selfhost
                 DisplayName = "demo"
             };
             userDb.AddUser(user, SaltedHashAlgorithm.HashPassword(user.DisplayName, "demo"));
-            
-            var historyDb = new MemoryHistoryDb();
-            var db = new OsmSharp.API.Db.Default.Db(
-                historyDb, userDb);
 
-            ApiBootstrapper.SetInstance("default", new DefaultApiInstance(db));
+            // build connection string and history db.
+            var connectionString = string.Format("Data Source={0};Version=3;New=true",
+                @"D:\work\data\OSM\sqlite\belgium.highways.historydb");
+            var historydb = new OsmSharp.Db.SQLite.HistoryDb(connectionString);
+
+            // buid api-db.
+            var db = new Db.Default.Db(historydb, userDb);
+            var api = new DefaultApiInstance(db);
+            api.Change += (change) =>
+            {
+                Logging.Logger.Log("Program", Logging.TraceEventType.Information, "Change detected!");
+            };
+
+            ApiBootstrapper.SetInstance("default", api);
 
             // start listening.
             var uri = new Uri("http://localhost:1234");

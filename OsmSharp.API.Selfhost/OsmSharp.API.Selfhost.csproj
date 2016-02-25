@@ -62,9 +62,12 @@
       <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.2.0.3-alpha\lib\net45\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=2.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.2.0.6-alpha\lib\net45\OsmSharp.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp.Db.SQLite">
+      <HintPath>..\..\sqlite-dataprovider\Output\OsmSharp.Db.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>

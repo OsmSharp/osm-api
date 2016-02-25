@@ -137,12 +137,12 @@ namespace OsmSharp.API.Tests.Mocks
 
         public ApiResult<bool> CloseChangeset(long id)
         {
-            throw new NotImplementedException();
+            return new ApiResult<bool>(true);
         }
 
         public ApiResult<long> ValidateUser(string username, string password)
         {
-            throw new NotImplementedException();
+            return new ApiResult<long>(1);
         }
     }
 }
