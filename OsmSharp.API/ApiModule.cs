@@ -138,8 +138,9 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.GetCapabilities());
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -196,6 +197,7 @@ namespace OsmSharp.API
             }
             catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -225,8 +227,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -286,8 +289,9 @@ namespace OsmSharp.API
                 }
                 return id.Data.ToInvariantString();
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -313,8 +317,9 @@ namespace OsmSharp.API
                 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -341,8 +346,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -374,8 +380,9 @@ namespace OsmSharp.API
                 }
                 return string.Empty;
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -401,8 +408,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -429,8 +437,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -466,8 +475,9 @@ namespace OsmSharp.API
                     }
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -528,8 +538,9 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.ApplyChangeset((long)_.changesetid, osmChange));
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -556,8 +567,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -602,8 +614,9 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -630,8 +643,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -658,8 +672,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -685,8 +700,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -712,8 +728,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -739,8 +756,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -766,8 +784,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -793,8 +812,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -820,8 +840,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -854,8 +875,9 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.GetUser(id));
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -882,8 +904,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
@@ -910,8 +933,9 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
-            catch (Exception)
+            catch (Exception ex)
             { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
                 return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
             }
         }
