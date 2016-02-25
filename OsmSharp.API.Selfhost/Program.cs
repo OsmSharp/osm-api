@@ -49,10 +49,8 @@ namespace OsmSharp.API.Selfhost
             };
             userDb.AddUser(user, SaltedHashAlgorithm.HashPassword(user.DisplayName, "demo"));
 
-            // build connection string and history db.
-            var connectionString = string.Format("Data Source={0};Version=3;New=true",
-                @"D:\work\data\OSM\sqlite\belgium.highways.historydb");
-            var historydb = new OsmSharp.Db.SQLite.HistoryDb(connectionString);
+            // build history db.
+            var historydb = new OsmSharp.Db.HistoryDb(new OsmSharp.Db.Impl.MemoryHistoryDb());
 
             // buid api-db.
             var db = new Db.Default.Db(historydb, userDb);
