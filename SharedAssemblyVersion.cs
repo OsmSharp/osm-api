@@ -22,5 +22,5 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.10.3")] // semantic versioning Major.Minor.Patch.Build
-[assembly: AssemblyInformationalVersion("0.10.3-alpha")] // do not change this; build server replace this automatically.
+[assembly: AssemblyVersion("0.10.4")] // semantic versioning Major.Minor.Patch.Build
+[assembly: AssemblyInformationalVersion("0.10.4-alpha")] // do not change this; build server replace this automatically.

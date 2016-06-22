@@ -45,37 +45,6 @@ namespace OsmSharp.API
         /// </summary>
         public ApiModule()
         {
-            this.EnableBasicAuthentication(
-                new BasicAuthenticationConfiguration(
-                    (username, password, context) =>
-                    {
-                        var instance = context.Request.Path.Substring(1, context.Request.Path.IndexOf('/', 1) - 1);
-
-                        IApiInstance api;
-                        if (!ApiBootstrapper.TryGetInstance(instance, out api))
-                        { // api instance not found.
-                            return null;
-                        }
-
-                        var result = api.ValidateUser(username, password);
-                        if (result.IsError)
-                        { // user not validated correctly.
-                            return null;
-                        }
-                        if (result.Data > 0)
-                        { // user validated an userid returned.
-                            return new UserIdentity()
-                            {
-                                UserId = (int)result.Data,
-                                UserName = username,
-                                Claims = new List<string>()
-                            };
-                        }
-
-                        // Not recognised => anonymous.
-                        return null;
-                    }, "OSM-API"));
-
             Get["{instance}/api/capabilities"] = _ => { return this.GetCapabilities(_); };
             Get["{instance}/api/0.6/capabilities"] = _ => { return this.GetCapabilities(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
