@@ -69,8 +69,7 @@ namespace OsmSharp.API.Selfhost
                 host.Start();
 
                 Console.WriteLine("The API is running at " + uri);
-                Console.WriteLine("Press [Enter] to close.");
-                Console.ReadLine();
+				System.Threading.Thread.Sleep(int.MaxValue);
             }
         }
     }

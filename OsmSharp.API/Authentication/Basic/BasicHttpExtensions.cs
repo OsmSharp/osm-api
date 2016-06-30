@@ -22,6 +22,44 @@ namespace OsmSharp.API.Authentication.Basic
             BasicAuthentication.Enable(module, configuration);
         }
 
+		/// <summary>
+		/// Module requires basic authentication
+		/// </summary>
+		/// <param name="module"></param>
+		public static void EnableBasicAuthentication(this INancyModule module)
+		{
+			module.EnableBasicAuthentication(
+				new BasicAuthenticationConfiguration(
+					(username, password, context) =>
+					{
+						var instance = context.Request.Path.Substring(1, context.Request.Path.IndexOf('/', 1) - 1);
+
+						IApiInstance api;
+						if (!ApiBootstrapper.TryGetInstance(instance, out api))
+						{ // api instance not found.
+							return null;
+						}
+
+						var result = api.ValidateUser(username, password);
+						if (result.IsError)
+						{ // user not validated correctly.
+							return null;
+						}
+						if (result.Data > 0)
+						{ // user validated an userid returned.
+							return new UserIdentity()
+							{
+								UserId = (int)result.Data,
+								UserName = username,
+								Claims = new List<string>()
+							};
+						}
+
+						// Not recognised => anonymous.
+						return null;
+					}, "OSM-API"));
+		}
+
         /// <summary>
         /// Module requires basic authentication
         /// </summary>

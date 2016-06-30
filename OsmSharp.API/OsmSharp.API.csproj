@@ -105,6 +105,7 @@
     <Compile Include="Responses\DiffResultXmlResponse.cs" />
     <Compile Include="Responses\OsmXmlResponse.cs" />
     <Compile Include="Responses\ResponseProcessor.cs" />
+    <Compile Include="Authentication\AuthenticationHooks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
