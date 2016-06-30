@@ -1,4 +1,5 @@
 ﻿using System;
+using Nancy;
 using OsmSharp.API.Authentication.Basic;
 
 namespace OsmSharp.API
@@ -11,7 +12,7 @@ namespace OsmSharp.API
 		/// <summary>
 		/// The authentication hook.
 		/// </summary>
-		public static Action<ApiModule> AuthenticationHook = (module) =>
+		public static Action<NancyModule> AuthenticationHook = (module) =>
 		{
 			module.EnableBasicAuthentication();
 		};
@@ -21,7 +22,7 @@ namespace OsmSharp.API
 		/// </summary>
 		/// <returns>The authentication.</returns>
 		/// <param name="module">Module.</param>
-		public static void SetupAuthentication(this ApiModule module)
+		public static void SetupAuthentication(this NancyModule module)
 		{
 			if (AuthenticationHooks.AuthenticationHook == null)
 			{

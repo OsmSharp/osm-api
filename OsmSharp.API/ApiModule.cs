@@ -45,6 +45,8 @@ namespace OsmSharp.API
         /// </summary>
         public ApiModule()
         {
+			this.SetupAuthentication();
+
             Get["{instance}/api/capabilities"] = _ => { return this.GetCapabilities(_); };
             Get["{instance}/api/0.6/capabilities"] = _ => { return this.GetCapabilities(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
