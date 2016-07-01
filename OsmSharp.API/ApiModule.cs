@@ -61,8 +61,11 @@ namespace OsmSharp.API
             Post["{instance}/api/0.6/changeset/{changesetid}/upload"] = _ => { return this.PostChangesetUpload(_); };
             Put["{instance}/api/0.6/[node|way|relation]/create"] = _ => { return this.PutElementCreate(_); };
             Get["{instance}/api/0.6/node/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Node); };
+			Get["{instance}/api/0.6/nodes"] = _ => { return this.GetElements(_, OsmGeoType.Node); };
             Get["{instance}/api/0.6/way/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Way); };
+			Get["{instance}/api/0.6/ways"] = _ => { return this.GetElements(_, OsmGeoType.Way); };
             Get["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Relation); };
+			Get["{instance}/api/0.6/relations"] = _ => { return this.GetElements(_, OsmGeoType.Relation); };
             Put["{instance}/api/0.6/node/{elementid}"] = _ => { return this.PutElementUpdate(_); };
             Put["{instance}/api/0.6/way/{elementid}"] = _ => { return this.PutElementUpdate(_); };
             Put["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.PutElementUpdate(_); };
@@ -75,7 +78,6 @@ namespace OsmSharp.API
             Get["{instance}/api/0.6/node/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
             Get["{instance}/api/0.6/way/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
             Get["{instance}/api/0.6/relation/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
-            Get["{instance}/api/0.6/[node|way|relation]"] = _ => { return this.GetElementMultiple(_); };
             Get["{instance}/api/0.6/node/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
             Get["{instance}/api/0.6/way/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
             Get["{instance}/api/0.6/relation/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
@@ -592,6 +594,67 @@ namespace OsmSharp.API
             }
         }
 
+		/// <summary>
+		/// Read: GET /api/0.6/[nodes|ways|relations]?[nodes|ways|relations]=(ids)
+		/// </summary>
+		private dynamic GetElements(dynamic _, OsmGeoType type)
+		{
+			try
+			{
+				this.EnableCors();
+				_logger.Log(Logging.TraceEventType.Verbose, "GetElements");
+
+				// get instance and check if active.
+				IApiInstance instance;
+				if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
+				{ // oeps, instance not active!
+					return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
+				}
+
+				var idParam = string.Empty;
+				switch (type)
+				{
+					case OsmGeoType.Node:
+						idParam = this.Request.Query["nodes"].ToInvariantString();
+						break;
+					case OsmGeoType.Way:
+						idParam = this.Request.Query["ways"].ToInvariantString();
+						break;
+					case OsmGeoType.Relation:
+						idParam = this.Request.Query["relations"].ToInvariantString();
+						break;
+				}
+
+				var idParamSplit = idParam.Split(',');
+				var ids = new long[idParamSplit.Length];
+				for (var i = 0; i < ids.Length; i++)
+				{
+					ids[i] = long.Parse(idParamSplit[i]);
+				}
+
+				ApiResult<Osm> result = null;
+				switch (type)
+				{
+					case OsmGeoType.Node:
+						result = instance.GetNodes(ids);
+						break;
+					case OsmGeoType.Way:
+						result = instance.GetWays(ids);
+						break;
+					case OsmGeoType.Relation:
+						result = instance.GetRelations(ids);
+						break;
+				}
+
+				return this.BuildResponse(result);
+			}
+			catch (Exception ex)
+			{ // an unhandled exception!
+				_logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+				return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
+			}
+		}
+
         /// <summary>
         /// Update: PUT /api/0.6/[node|way|relation]/#id
         /// </summary>
@@ -689,34 +752,6 @@ namespace OsmSharp.API
             {
                 this.EnableCors();
                 _logger.Log(Logging.TraceEventType.Verbose, "GetElementVersion");
-
-                // get instance and check if active.
-                IApiInstance instance;
-                if (!ApiBootstrapper.TryGetInstance(_.instance, out instance))
-                { // oeps, instance not active!
-                    return Negotiate.WithStatusCode(HttpStatusCode.NotFound);
-                }
-
-                return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
-            }
-            catch (Exception ex)
-            { // an unhandled exception!
-                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
-                return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
-            }
-        }
-
-        /// <summary>
-        /// Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
-        /// </summary>
-        /// <param name="_"></param>
-        /// <returns></returns>
-        private dynamic GetElementMultiple(dynamic _)
-        {
-            try
-            {
-                this.EnableCors();
-                _logger.Log(Logging.TraceEventType.Verbose, "GetElementMultiple");
 
                 // get instance and check if active.
                 IApiInstance instance;

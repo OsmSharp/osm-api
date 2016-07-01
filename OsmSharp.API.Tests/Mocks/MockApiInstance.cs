@@ -93,6 +93,23 @@ namespace OsmSharp.API.Tests.Mocks
             });
         }
 
+		/// <summary>
+		/// Gets the nodes with the given ids.
+		/// </summary>
+		public ApiResult<Osm> GetNodes(long[] ids)
+		{
+			var nodes = new Node[ids.Length];
+			for (var i = 0; i < nodes.Length; i++)
+			{
+				nodes[i] = _nodes.Find(x => x.Id == ids[i]);
+			}
+			return new ApiResult<Osm>(new Osm()
+			{
+				Version = 0.6,
+				Nodes = nodes
+			});
+		}
+
         public ApiResult<Osm> GetRelation(long id)
         {
             var relation = _relations.Find(x => x.Id == id);
@@ -108,6 +125,20 @@ namespace OsmSharp.API.Tests.Mocks
                 }
             });
         }
+
+		public ApiResult<Osm> GetRelations(long[] ids)
+		{
+			var relations = new Relation[ids.Length];
+			for (var i = 0; i < relations.Length; i++)
+			{
+				relations[i] = _relations.Find(x => x.Id == ids[i]);
+			}
+			return new ApiResult<Osm>(new Osm()
+			{
+				Version = 0.6,
+				Relations = relations
+			});
+		}
 
         public ApiResult<Osm> GetUser(long id)
         {
@@ -129,6 +160,20 @@ namespace OsmSharp.API.Tests.Mocks
                 }
             });
         }
+
+		public ApiResult<Osm> GetWays(long[] ids)
+		{
+			var ways = new Way[ids.Length];
+			for (var i = 0; i < ways.Length; i++)
+			{
+				ways[i] = _ways.Find(x => x.Id == ids[i]);
+			}
+			return new ApiResult<Osm>(new Osm()
+			{
+				Version = 0.6,
+				Ways = ways
+			});
+		}
 
         public ApiResult<bool> ValidateChangeset(OsmChange osmChange)
         {

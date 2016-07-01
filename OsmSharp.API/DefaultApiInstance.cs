@@ -156,6 +156,23 @@ namespace OsmSharp.API
             });
         }
 
+		/// <summary>
+		/// Gets the nodes with the given ids.
+		/// </summary>
+		public ApiResult<Osm> GetNodes(long[] ids)
+		{
+			var nodes = new Node[ids.Length];
+			for (var i = 0; i < nodes.Length; i++)
+			{
+				nodes[i] = _db.GetNode(ids[i]);
+			}
+			return new ApiResult<Osm>(new Osm()
+			{
+				Version = 0.6,
+				Nodes = nodes
+			});
+		}
+
         /// <summary>
         /// Gets the way with the given id.
         /// </summary>
@@ -173,6 +190,23 @@ namespace OsmSharp.API
             });
         }
 
+		/// <summary>
+		/// Gets the ways with the given ids.
+		/// </summary>
+		public ApiResult<Osm> GetWays(long[] ids)
+		{
+			var ways = new Way[ids.Length];
+			for (var i = 0; i < ways.Length; i++)
+			{
+				ways[i] = _db.GetWay(ids[i]);
+			}
+			return new ApiResult<Osm>(new Osm()
+			{
+				Version = 0.6,
+				Ways = ways
+			});
+		}
+
         /// <summary>
         /// Gets the relation with the given id.
         /// </summary>
@@ -189,6 +223,23 @@ namespace OsmSharp.API
                 Relations = new Relation[] { relation }
             });
         }
+
+		/// <summary>
+		/// Gets the relations with the given ids.
+		/// </summary>
+		public ApiResult<Osm> GetRelations(long[] ids)
+		{
+			var relations = new Relation[ids.Length];
+			for (var i = 0; i < relations.Length; i++)
+			{
+				relations[i] = _db.GetRelation(ids[i]);
+			}
+			return new ApiResult<Osm>(new Osm()
+			{
+				Version = 0.6,
+				Relations = relations
+			});
+		}
 
         /// <summary>
         /// Gets the user with the given id.

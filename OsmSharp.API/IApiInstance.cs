@@ -50,15 +50,36 @@ namespace OsmSharp.API
         /// </summary>
         ApiResult<Osm> GetNode(long id);
 
+		/// <summary>
+		/// Gets the nodes with the given ids.
+		/// </summary>
+		/// <returns>The nodes.</returns>
+		/// <param name="ids">Identifiers.</param>
+		ApiResult<Osm> GetNodes(long[] ids);
+
         /// <summary>
         /// Gets the way with the given id.
         /// </summary>
         ApiResult<Osm> GetWay(long id);
 
+		/// <summary>
+		/// Gets the ways with the given ids.
+		/// </summary>
+		/// <returns>The ways.</returns>
+		/// <param name="ids">Identifiers.</param>
+		ApiResult<Osm> GetWays(long[] ids);
+
         /// <summary>
         /// Gets the relation with the given id.
         /// </summary>
         ApiResult<Osm> GetRelation(long id);
+
+		/// <summary>
+		/// Gets the relations with the given ids.
+		/// </summary>
+		/// <returns>The relations.</returns>
+		/// <param name="ids">Identifiers.</param>
+		ApiResult<Osm> GetRelations(long[] ids);
 
         /// <summary>
         /// Gets the user with the given id.

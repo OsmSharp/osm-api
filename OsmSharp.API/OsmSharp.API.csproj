@@ -62,10 +62,6 @@
       <HintPath>..\packages\Nancy.Authentication.Stateless.1.4.1\lib\net40\Nancy.Authentication.Stateless.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp, Version=2.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.2.0.6-alpha\lib\net45\OsmSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -76,6 +72,9 @@
     <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Zlib.Portable.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp">
+      <HintPath>..\packages\OsmSharp.Core.2.0.11-alpha\lib\net45\OsmSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
