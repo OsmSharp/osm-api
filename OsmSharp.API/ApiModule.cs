@@ -51,13 +51,16 @@ namespace OsmSharp.API
             Get["{instance}/api/0.6/capabilities"] = _ => { return this.GetCapabilities(_); };
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
             Get["{instance}/api/0.6/permissions"] = _ => { return this.GetPermissions(_); };
+			Options["{instance}/api/0.6/changeset/create"] = _ => { return this.CorsOptions(_); };
             Put["{instance}/api/0.6/changeset/create"] = _ => { return this.PutChangesetCreate(_); };
+			Options["{instance}/api/0.6/changeset/{changesetid}/close"] = _ => { return this.CorsOptions(_); };
             Put["{instance}/api/0.6/changeset/{changesetid}/close"] = _ => { return this.PutChangesetClose(_); };
             Get["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.GetChangeset(_); };
             Put["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.PutChangesetUpdate(_); };
             Get["{instance}/api/0.6/changeset/{changesetid}/download"] = _ => { return this.GetChangesetDownload(_); };
             Post["{instance}/api/0.6/changeset/{changesetid}/expand_bbox"] = _ => { return this.PostChangesetExpandBB(_); };
             Get["{instance}/api/0.6/changesets"] = _ => { return this.GetChangesetQuery(_); };
+			Options["{instance}/api/0.6/changeset/{changesetid}/upload"] = _ => { return this.CorsOptions(_); };
             Post["{instance}/api/0.6/changeset/{changesetid}/upload"] = _ => { return this.PostChangesetUpload(_); };
             Put["{instance}/api/0.6/[node|way|relation]/create"] = _ => { return this.PutElementCreate(_); };
             Get["{instance}/api/0.6/node/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Node); };
@@ -88,7 +91,18 @@ namespace OsmSharp.API
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
             Get["{instance}/api/0.6/user/{id}"] = _ => { return this.GetUserDetails(_); };
             Get["{instance}/api/0.6/user/details"] = _ => { return this.GetCurrentUserDetails(_); };
-        }
+		}
+
+		/// <summary>
+		/// Enables cors.
+		/// </summary>
+		/// <returns>The options.</returns>
+		/// <param name="_">.</param>
+		private dynamic CorsOptions(dynamic _)
+		{
+			this.EnableCors();
+			return string.Empty;
+		}
 
         /// <summary>
         /// This API call is meant to provide information about the capabilities and limitations of the current API. 
@@ -615,13 +629,13 @@ namespace OsmSharp.API
 				switch (type)
 				{
 					case OsmGeoType.Node:
-						idParam = this.Request.Query["nodes"].ToInvariantString();
+						idParam = this.Request.Query["nodes"].ToString();
 						break;
 					case OsmGeoType.Way:
-						idParam = this.Request.Query["ways"].ToInvariantString();
+						idParam = this.Request.Query["ways"].ToString();
 						break;
 					case OsmGeoType.Relation:
-						idParam = this.Request.Query["relations"].ToInvariantString();
+						idParam = this.Request.Query["relations"].ToString();
 						break;
 				}
 
