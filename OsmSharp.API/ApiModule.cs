@@ -48,50 +48,128 @@ namespace OsmSharp.API
 			this.SetupAuthentication();
 
             Get["{instance}/api/capabilities"] = _ => { return this.GetCapabilities(_); };
+            Options["{instance}/api/capabilities"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/capabilities"] = _ => { return this.GetCapabilities(_); };
+            Options["{instance}/api/0.6/capabilities"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
+            Options["{instance}/api/0.6/map"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/permissions"] = _ => { return this.GetPermissions(_); };
-			Options["{instance}/api/0.6/changeset/create"] = _ => { return this.CorsOptions(_); };
+            Options["{instance}/api/0.6/permissions"] = _ => { return this.CorsOptions(_); };
+
             Put["{instance}/api/0.6/changeset/create"] = _ => { return this.PutChangesetCreate(_); };
-			Options["{instance}/api/0.6/changeset/{changesetid}/close"] = _ => { return this.CorsOptions(_); };
+            Options["{instance}/api/0.6/changeset/create"] = _ => { return this.CorsOptions(_); };
+
             Put["{instance}/api/0.6/changeset/{changesetid}/close"] = _ => { return this.PutChangesetClose(_); };
+            Options["{instance}/api/0.6/changeset/{changesetid}/close"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.GetChangeset(_); };
+            Options["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.CorsOptions(_); };
+
             Put["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.PutChangesetUpdate(_); };
+            Options["{instance}/api/0.6/changeset/{changesetid}"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/changeset/{changesetid}/download"] = _ => { return this.GetChangesetDownload(_); };
+            Options["{instance}/api/0.6/changeset/{changesetid}/download"] = _ => { return this.CorsOptions(_); };
+
             Post["{instance}/api/0.6/changeset/{changesetid}/expand_bbox"] = _ => { return this.PostChangesetExpandBB(_); };
+            Options["{instance}/api/0.6/changeset/{changesetid}/expand_bbox"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/changesets"] = _ => { return this.GetChangesetQuery(_); };
-			Options["{instance}/api/0.6/changeset/{changesetid}/upload"] = _ => { return this.CorsOptions(_); };
+            Options["{instance}/api/0.6/changesets"] = _ => { return this.CorsOptions(_); };
+
             Post["{instance}/api/0.6/changeset/{changesetid}/upload"] = _ => { return this.PostChangesetUpload(_); };
+            Options["{instance}/api/0.6/changeset/{changesetid}/upload"] = _ => { return this.CorsOptions(_); };
+
             Put["{instance}/api/0.6/[node|way|relation]/create"] = _ => { return this.PutElementCreate(_); };
+            Options["{instance}/api/0.6/[node|way|relation]/create"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/node/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Node); };
-			Get["{instance}/api/0.6/nodes"] = _ => { return this.GetElements(_, OsmGeoType.Node); };
+            Options["{instance}/api/0.6/node/{elementid}"] = _ => { return this.CorsOptions(_); };
+
+            Get["{instance}/api/0.6/nodes"] = _ => { return this.GetElements(_, OsmGeoType.Node); };
+            Options["{instance}/api/0.6/nodes"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/way/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Way); };
-			Get["{instance}/api/0.6/ways"] = _ => { return this.GetElements(_, OsmGeoType.Way); };
+            Options["{instance}/api/0.6/way/{elementid}"] = _ => { return this.CorsOptions(_); };
+
+            Get["{instance}/api/0.6/ways"] = _ => { return this.GetElements(_, OsmGeoType.Way); };
+            Options["{instance}/api/0.6/ways"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.GetElement(_, OsmGeoType.Relation); };
-			Get["{instance}/api/0.6/relations"] = _ => { return this.GetElements(_, OsmGeoType.Relation); };
+            Options["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.CorsOptions(_); };
+
+            Get["{instance}/api/0.6/relations"] = _ => { return this.GetElements(_, OsmGeoType.Relation); };
+            Options["{instance}/api/0.6/relations"] = _ => { return this.CorsOptions(_); };
+
             Put["{instance}/api/0.6/node/{elementid}"] = _ => { return this.PutElementUpdate(_); };
+            Options["{instance}/api/0.6/node/{elementid}"] = _ => { return this.CorsOptions(_); };
+
             Put["{instance}/api/0.6/way/{elementid}"] = _ => { return this.PutElementUpdate(_); };
+            Options["{instance}/api/0.6/way/{elementid}"] = _ => { return this.CorsOptions(_); };
+
             Put["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.PutElementUpdate(_); };
+            Options["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.CorsOptions(_); };
+
             Delete["{instance}/api/0.6/node/{elementid}"] = _ => { return this.DeleteElement(_); };
+            Options["{instance}/api/0.6/node/{elementid}"] = _ => { return this.CorsOptions(_); };
+
             Delete["{instance}/api/0.6/way/{elementid}"] = _ => { return this.DeleteElement(_); };
+            Options["{instance}/api/0.6/way/{elementid}"] = _ => { return this.CorsOptions(_); };
+
             Delete["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.DeleteElement(_); };
+            Options["{instance}/api/0.6/relation/{elementid}"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/node/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
+            Options["{instance}/api/0.6/node/{elementid}/history"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/way/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
+            Options["{instance}/api/0.6/way/{elementid}/history"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/relation/{elementid}/history"] = _ => { return this.GetElementHistory(_); };
+            Options["{instance}/api/0.6/relation/{elementid}/history"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/node/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
+            Options["{instance}/api/0.6/node/{elementid}/{version}"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/way/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
+            Options["{instance}/api/0.6/way/{elementid}/{version}"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/relation/{elementid}/{version}"] = _ => { return this.GetElementVersion(_); };
+            Options["{instance}/api/0.6/relation/{elementid}/{version}"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/node/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
+            Options["{instance}/api/0.6/node/{elementid}/relations"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/way/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
+            Options["{instance}/api/0.6/way/{elementid}/relations"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/relation/{elementid}/relations"] = _ => { return this.GetElementRelations(_); };
+            Options["{instance}/api/0.6/relation/{elementid}/relations"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/node/{elementid}/full"] = _ => { return this.GetElementFull(_); };
+            Options["{instance}/api/0.6/node/{elementid}/full"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/way/{elementid}/full"] = _ => { return this.GetElementFull(_); };
+            Options["{instance}/api/0.6/way/{elementid}/full"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/relation/{elementid}/full"] = _ => { return this.GetElementFull(_); };
+            Options["{instance}/api/0.6/relation/{elementid}/full"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/node/{id}/ways"] = _ => { return this.GetWaysForNode(_); };
+            Options["{instance}/api/0.6/node/{id}/ways"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/map"] = _ => { return this.GetMap(_); };
+            Options["{instance}/api/0.6/map"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/user/{id}"] = _ => { return this.GetUserDetails(_); };
+            Options["{instance}/api/0.6/user/{id}"] = _ => { return this.CorsOptions(_); };
+
             Get["{instance}/api/0.6/user/details"] = _ => { return this.GetCurrentUserDetails(_); };
-		}
+            Options["{instance}/api/0.6/user/details"] = _ => { return this.CorsOptions(_); };
+        }
 
 		/// <summary>
 		/// Enables cors.
