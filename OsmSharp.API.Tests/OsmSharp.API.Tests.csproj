@@ -56,9 +56,8 @@
       <HintPath>..\packages\Nancy.Testing.1.4.1\lib\net40\Nancy.Testing.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp, Version=2.2.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.2.2.10-beta\lib\net45\OsmSharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OsmSharp">
+      <HintPath>..\packages\OsmSharp.5.0.0-rc1\lib\net45\OsmSharp.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>

@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using Nancy;
+using Nancy.ErrorHandling;
 using Nancy.ModelBinding;
 using Nancy.Security;
 using OsmSharp.API.Authentication;
@@ -203,6 +204,11 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.GetCapabilities());
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -260,6 +266,11 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.GetMap(left, bottom, right, top));
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -291,6 +302,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -354,6 +370,11 @@ namespace OsmSharp.API
                 }
                 return id.Data.ToInvariantString();
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -381,6 +402,11 @@ namespace OsmSharp.API
                 }
                 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -410,6 +436,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -445,6 +476,11 @@ namespace OsmSharp.API
                 }
                 return string.Empty;
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -472,6 +508,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -501,6 +542,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -539,6 +585,11 @@ namespace OsmSharp.API
                         }
                     }
                 };
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -603,6 +654,11 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.ApplyChangeset((long)_.changesetid, osmChange));
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -631,6 +687,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -678,6 +739,11 @@ namespace OsmSharp.API
                 }
 
                 return this.BuildResponse(result);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -739,8 +805,13 @@ namespace OsmSharp.API
 				}
 
 				return this.BuildResponse(result);
-			}
-			catch (Exception ex)
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
+            catch (Exception ex)
 			{ // an unhandled exception!
 				_logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
 				return Negotiate.WithStatusCode(HttpStatusCode.InternalServerError);
@@ -768,6 +839,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -798,6 +874,11 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -825,6 +906,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -854,6 +940,11 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -881,6 +972,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -910,6 +1006,11 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -937,6 +1038,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
@@ -973,6 +1079,11 @@ namespace OsmSharp.API
 
                 return this.BuildResponse(instance.GetUser(id));
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -1002,6 +1113,11 @@ namespace OsmSharp.API
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
             }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
+            }
             catch (Exception ex)
             { // an unhandled exception!
                 _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
@@ -1030,6 +1146,11 @@ namespace OsmSharp.API
                 }
 
                 return Negotiate.WithStatusCode(HttpStatusCode.NotImplemented);
+            }
+            catch (RouteExecutionEarlyExitException ex)
+            { // an unhandled exception!
+                _logger.Log(Logging.TraceEventType.Error, ex.ToInvariantString());
+                return ex.Response;
             }
             catch (Exception ex)
             { // an unhandled exception!
