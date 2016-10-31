@@ -63,8 +63,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OsmSharp, Version=5.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\anyways\osm-api\packages\OsmSharp.5.0.2-rc1\lib\net45\OsmSharp.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OsmSharp.5.0.2-rc1\lib\net45\OsmSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -57,8 +57,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OsmSharp, Version=5.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\OsmSharp.5.0.2-rc1\lib\net45\OsmSharp.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
