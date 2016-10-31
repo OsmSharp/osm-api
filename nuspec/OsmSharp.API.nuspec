@@ -15,8 +15,7 @@
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap</tags>
         <dependencies>
-            <dependency id="protobuf-net" version="2.0.0.668" />
-            <dependency id="Zlib.Portable" version="1.11.0" />
+            <dependency id="OsmSharp" version="5.0.2-rc1" />
         </dependencies>
     </metadata>
     <files>
