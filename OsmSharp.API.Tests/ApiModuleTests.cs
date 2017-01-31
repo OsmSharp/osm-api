@@ -50,7 +50,14 @@ namespace OsmSharp.API.Tests
                 },
                 new Way[0],
                 new Relation[0]);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -92,7 +99,14 @@ namespace OsmSharp.API.Tests
                     Nodes = new long[] { 1, 2, 3 }
                 }
             }, new Relation[0]);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -158,7 +172,14 @@ namespace OsmSharp.API.Tests
                         }
                     }
                 });
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -237,7 +258,14 @@ namespace OsmSharp.API.Tests
                     Maximum = 2000
                 }
             };
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -270,7 +298,14 @@ namespace OsmSharp.API.Tests
         public void TestGetPermissions()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -297,7 +332,14 @@ namespace OsmSharp.API.Tests
         public void TestGetChangeset()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -324,7 +366,14 @@ namespace OsmSharp.API.Tests
         public void TestCreateChangetset()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -373,7 +422,14 @@ namespace OsmSharp.API.Tests
         public void TestPutChangeset()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -411,7 +467,14 @@ namespace OsmSharp.API.Tests
         public void TestPutChangesetClose()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -449,7 +512,14 @@ namespace OsmSharp.API.Tests
         public void TestGetChangesetDownload()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -487,7 +557,14 @@ namespace OsmSharp.API.Tests
         public void TestPostChangesetExpandBB()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -525,7 +602,14 @@ namespace OsmSharp.API.Tests
         public void TestPutNodeCreate()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -563,7 +647,14 @@ namespace OsmSharp.API.Tests
         public void TestPutWayCreate()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -601,7 +692,14 @@ namespace OsmSharp.API.Tests
         public void TestPutRelationCreate()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -639,7 +737,14 @@ namespace OsmSharp.API.Tests
         public void TestPutNodeUpdate()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -677,7 +782,14 @@ namespace OsmSharp.API.Tests
         public void TestPutWayUpdate()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -715,7 +827,14 @@ namespace OsmSharp.API.Tests
         public void TestPutRelationUpdate()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -753,7 +872,14 @@ namespace OsmSharp.API.Tests
         public void TestDeleteNode()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -791,7 +917,14 @@ namespace OsmSharp.API.Tests
         public void TestDeleteWay()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -829,7 +962,14 @@ namespace OsmSharp.API.Tests
         public void TestDeleteRelation()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(cfg =>
@@ -867,7 +1007,14 @@ namespace OsmSharp.API.Tests
         public void TestGetNodeHistory()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -894,7 +1041,14 @@ namespace OsmSharp.API.Tests
         public void TestGetWayHistory()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -921,7 +1075,14 @@ namespace OsmSharp.API.Tests
         public void TestGetRelationHistory()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -948,7 +1109,14 @@ namespace OsmSharp.API.Tests
         public void TestGetNodeVersion()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -975,7 +1143,14 @@ namespace OsmSharp.API.Tests
         public void TestGetWayVersion()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -1002,7 +1177,14 @@ namespace OsmSharp.API.Tests
         public void TestGetRelationVersion()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -1029,7 +1211,14 @@ namespace OsmSharp.API.Tests
         public void TestGetNodeRelations()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -1056,7 +1245,14 @@ namespace OsmSharp.API.Tests
         public void TestGetWayRelations()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -1083,7 +1279,14 @@ namespace OsmSharp.API.Tests
         public void TestGetRelationRelations()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -1110,7 +1313,14 @@ namespace OsmSharp.API.Tests
         public void TestGetNodeFull()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -1137,7 +1347,14 @@ namespace OsmSharp.API.Tests
         public void TestGetWayFull()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));
@@ -1164,7 +1381,14 @@ namespace OsmSharp.API.Tests
         public void TestGetRelationFull()
         {
             var api = new Mocks.MockApiInstance(null, null, null);
-            ApiBootstrapper.SetInstance("test", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "test")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             var bootstrapper = new DefaultNancyBootstrapper();
             var browser = new Browser(bootstrapper, defaults: to => to.Accept("application/xml"));

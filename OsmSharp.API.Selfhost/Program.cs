@@ -60,7 +60,14 @@ namespace OsmSharp.API.Selfhost
                 Logging.Logger.Log("Program", Logging.TraceEventType.Information, "Change detected!");
             };
 
-            ApiBootstrapper.SetInstance("default", api);
+            ApiBootstrapper.GetInstance = (name) =>
+            {
+                if (name == "default")
+                {
+                    return api;
+                }
+                return null;
+            };
 
             // start listening.
             var uri = new Uri("http://localhost:1234");

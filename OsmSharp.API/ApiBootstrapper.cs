@@ -29,31 +29,28 @@ namespace OsmSharp.API
     /// </summary>
     public static class ApiBootstrapper
     {
-        private static Dictionary<string, IApiInstance> _instances = 
-            new Dictionary<string,IApiInstance>();
-
         /// <summary>
-        /// Sets the api instances.
+        /// A delegate to describe the signature of the get instance function.
         /// </summary>
-        public static void SetInstance(string name, IApiInstance instance)
-        {
-            _instances[name] = instance;
-        }
-
-        /// <summary>
-        /// Returns true when there is an active instance.
-        /// </summary>
-        public static bool IsActive(string name)
-        {
-            return _instances.ContainsKey(name);
-        }
+        public delegate IApiInstance GetInstanceDelegate(string name);
 
         /// <summary>
         /// Gets the api instance.
         /// </summary>
+        public static GetInstanceDelegate GetInstance;
+
+        /// <summary>
+        /// Tries to get the api instance with the given name.
+        /// </summary>
         public static bool TryGetInstance(string name, out IApiInstance instance)
         {
-            return _instances.TryGetValue(name, out instance);
+            if (ApiBootstrapper.GetInstance == null)
+            {
+                instance = null;
+                return false;
+            }
+            instance = ApiBootstrapper.GetInstance(name);
+            return instance != null;
         }
     }
 }
